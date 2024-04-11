@@ -2,6 +2,9 @@ package com.example.learningcourseapp.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Date;
+
 @Getter
 @Setter
 @Entity
@@ -18,6 +21,8 @@ public class CommentEntity {
     @Column (name = "content")
     private String content;
 
+    @Column (name = "create_at")
+    private Date createAt;
 
     @ManyToOne
     @JoinColumn(name = "course_id")

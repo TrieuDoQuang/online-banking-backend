@@ -2,6 +2,8 @@ package com.example.learningcourseapp.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Date;
 import java.util.List;
 @Getter
 @Setter
@@ -27,6 +29,9 @@ public class CourseEntity {
 
     @Column (name = "cost")
     private double cost;
+
+    @Column (name = "create_at")
+    private Date createAt;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CommentEntity> comments;

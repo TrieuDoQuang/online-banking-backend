@@ -24,7 +24,7 @@ public class InstructorEntity {
     @Column (name = "date_of_birth")
     private Date dateOfBirth;
     @Column (name = "balance")
-    private long balance;
+    private Double balance;
     @Column (name = "email")
     private String email;
     @Column (name = "phone_number")

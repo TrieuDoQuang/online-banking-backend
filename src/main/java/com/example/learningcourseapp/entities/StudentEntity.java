@@ -34,7 +34,8 @@ public class StudentEntity {
     @Column (name = "phone_number")
     private long phoneNumber;
     @Column (name = "balance")
-    private long balance;
+    private Double balance;
+
 
     @ManyToMany (targetEntity = CourseEntity.class)
     private List<CourseEntity> courses;
