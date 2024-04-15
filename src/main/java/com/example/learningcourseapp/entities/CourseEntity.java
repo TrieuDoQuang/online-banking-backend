@@ -33,6 +33,9 @@ public class CourseEntity {
     @Column (name = "create_at")
     private Date createAt;
 
+    @Column (name = "category")
+    private String category;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CommentEntity> comments;
 
