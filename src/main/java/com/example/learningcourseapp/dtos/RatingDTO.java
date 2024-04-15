@@ -1,16 +1,14 @@
-package com.example.learningcourseapp.entities;
+package com.example.learningcourseapp.dtos;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+@Data
 @Getter
 @Setter
-@Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@Table(name ="ratings")
-
-public class RatingEntity {
+@NoArgsConstructor
+public class RatingDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,11 +16,12 @@ public class RatingEntity {
     @Column (name = "rating_value")
     private long ratingValue;
 
+
     @ManyToOne
     @JoinColumn(name = "course_id")
-    private CourseEntity course;
+    private CourseDTO course;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private StudentEntity student;
+    private StudentDTO student;
 }
