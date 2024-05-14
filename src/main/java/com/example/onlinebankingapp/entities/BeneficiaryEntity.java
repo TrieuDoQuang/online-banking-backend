@@ -16,4 +16,13 @@ public class BeneficiaryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+//    @Column(name = "name")
+//    private String name;
+//
+//    @Column(name = "accountnumber")
+//    private String accountNumber;
+//
+//    @Column(name = "cus_id")
+//    private Long cus_id;
 }

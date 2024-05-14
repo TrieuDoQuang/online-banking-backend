@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="savingAccount")
+@Table(name ="savingAccounts")
 public class SavingAccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
