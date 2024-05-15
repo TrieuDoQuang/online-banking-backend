@@ -15,34 +15,36 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="employees")
+@Table(name ="employee")
 public class EmployeeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long employeeId;
+    private long employeeId;
 
-    @Column(name="address")
+    @Column(name="address", nullable = false, length = 100)
     private String address;
 
-    @Column(name="citizenId")
+    @Column(name="citizenId", nullable = false, length = 20)
     private String citizenId;
 
-    @Column(name="dateOfBirth")
-    private Date dateOfBirth;
+    @Column(name="dateOfBirth", nullable = false, length = 20)
+    private String dateOfBirth;
 
-    @Column(name="email")
+    @Column(name="email", nullable = false, length = 100)
     private String email;
 
-    @Column(name="name")
+    @Column(name="name", nullable = false, length = 100)
     private String name;
 
-    @Column(name="password")
+    @Column(name="password", nullable = false, length = 100)
     private String password;
 
-    @Column(name="phonenumber")
+    @Column(name="phonenumber", nullable = false, length = 20)
     private String phonenumber;
 
-    @Column(name="role", columnDefinition = "varchar(255) check (role in ('Administrator', 'Staff'))")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name="role", nullable = false, length = 20)
+    private Role role;
 }
+
