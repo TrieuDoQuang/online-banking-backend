@@ -14,7 +14,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="paymentAccounts")
+@Table(name ="payment_accounts")
 public class PaymentAccountEntity {
     @Id
     @Column(name = "paymentAccountId")

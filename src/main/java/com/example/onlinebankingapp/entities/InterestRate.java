@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="interestRates")
+@Table(name ="interest_rates")
 public class InterestRate {
     @Id
     @Column(name="interestId")
