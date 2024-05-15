@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @Table(name ="admins")
-public class AdminEntity {
+public class AdminEntity extends AbstractUser{
     @Id
     @Column(name="adminId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

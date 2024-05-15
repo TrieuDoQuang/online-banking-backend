@@ -1,7 +1,5 @@
 package com.example.onlinebankingapp.entities;
 
-import com.example.onlinebankingapp.entities.enums.AccountStatus;
-import com.example.onlinebankingapp.entities.enums.AccountType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -31,6 +29,14 @@ public class PaymentAccountEntity extends AbstractAccount{
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "customerId", referencedColumnName = "customerId", nullable = false)
     private CustomerEntity customer;
+
+//    @ManyToMany(cascade = CascadeType.DETACH)
+//    @JoinTable(
+//            name = "rewards_of_accounts",
+//            joinColumns = @JoinColumn(name = "accountId", referencedColumnName = "paymentAccountId"),
+//            inverseJoinColumns = @JoinColumn(name = "rewardId", referencedColumnName = "rewardId")
+//    )
+//    private List<RewardEntity> rewards;
 
     @OneToOne(mappedBy = "paymentAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private BeneficiaryEntity beneficiary;
