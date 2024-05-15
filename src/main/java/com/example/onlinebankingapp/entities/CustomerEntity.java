@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -19,6 +21,9 @@ public class CustomerEntity extends AbstractUser{
     @Column(name="customerId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PaymentAccountEntity> paymentAccounts;
 
     @Column(name="pinNumber", length = 6)
     private Integer pinNumber;

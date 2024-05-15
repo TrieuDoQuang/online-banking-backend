@@ -1,4 +1,4 @@
-package com.example.onlinebankingapp.entities;
+package com.example.onlinebankingapp.entities.enums;
 
 public enum EmployeeRole {
     ADMINISTRATOR,

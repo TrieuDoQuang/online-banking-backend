@@ -1,10 +1,9 @@
 package com.example.onlinebankingapp.entities;
 
+import com.example.onlinebankingapp.entities.enums.EmployeeRole;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.sql.Date;
 
 @Getter
 @Setter

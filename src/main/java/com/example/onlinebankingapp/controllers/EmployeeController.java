@@ -2,7 +2,7 @@ package com.example.onlinebankingapp.controllers;
 
 import com.example.onlinebankingapp.dtos.EmployeeDTO;
 import com.example.onlinebankingapp.entities.EmployeeEntity;
-import com.example.onlinebankingapp.entities.EmployeeRole;
+import com.example.onlinebankingapp.entities.enums.EmployeeRole;
 import com.example.onlinebankingapp.responses.ResponseObject;
 import com.example.onlinebankingapp.services.Employee.IEmployeeService;
 import jakarta.validation.Valid;

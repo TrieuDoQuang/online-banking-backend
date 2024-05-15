@@ -1,7 +1,7 @@
 package com.example.onlinebankingapp.repositories;
 
 import com.example.onlinebankingapp.entities.EmployeeEntity;
-import com.example.onlinebankingapp.entities.EmployeeRole;
+import com.example.onlinebankingapp.entities.enums.EmployeeRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -2,7 +2,7 @@ package com.example.onlinebankingapp.services.Employee;
 
 import com.example.onlinebankingapp.dtos.EmployeeDTO;
 import com.example.onlinebankingapp.entities.EmployeeEntity;
-import com.example.onlinebankingapp.entities.EmployeeRole;
+import com.example.onlinebankingapp.entities.enums.EmployeeRole;
 import com.example.onlinebankingapp.repositories.EmployeeRepository;
 import com.example.onlinebankingapp.utils.DataParserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
