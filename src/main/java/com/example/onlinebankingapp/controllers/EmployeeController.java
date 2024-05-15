@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.controllers;
 
+import com.example.onlinebankingapp.dtos.EmployeeDTO;
 import com.example.onlinebankingapp.entities.EmployeeEntity;
 import com.example.onlinebankingapp.entities.Role;
 import com.example.onlinebankingapp.responses.ResponseObject;
@@ -40,7 +41,7 @@ public class EmployeeController{
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addEmployee(@Valid @RequestBody EmployeeEntity employeeEntity, BindingResult result){
+    public ResponseEntity<?> addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO, BindingResult result){
         try {
             if(result.hasErrors()) {
                 List<String> errorMessages = result.getFieldErrors()
@@ -49,9 +50,9 @@ public class EmployeeController{
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            employeeService.addEmployee(employeeEntity);
+            EmployeeEntity employeeResponse = employeeService.addEmployee(employeeDTO);
             return ResponseEntity.ok(ResponseObject.builder()
-                    .data(employeeEntity)
+                    .data(employeeResponse)
                     .message("Create Employee successfully")
                     .status(200)
                     .build());

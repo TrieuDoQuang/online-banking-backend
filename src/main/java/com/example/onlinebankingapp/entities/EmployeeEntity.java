@@ -1,13 +1,10 @@
 package com.example.onlinebankingapp.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Date;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -19,32 +16,33 @@ import java.util.Date;
 public class EmployeeEntity {
 
     @Id
+    @Column(name="employeeId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long employeeId;
+    private Long employeeId;
 
-    @Column(name="address", nullable = false, length = 100)
+    @Column(name="address", length = 100, nullable = false)
     private String address;
 
-    @Column(name="citizenId", nullable = false, length = 20)
+    @Column(name="citizenId", length = 20, nullable = false, unique = true)
     private String citizenId;
 
-    @Column(name="dateOfBirth", nullable = false, length = 20)
-    private String dateOfBirth;
+    @Column(name="dateOfBirth", length = 20, nullable = false)
+    private Date dateofbirth;
 
-    @Column(name="email", nullable = false, length = 100)
+    @Column(name="email", length = 100, nullable = false, unique = true)
     private String email;
 
-    @Column(name="name", nullable = false, length = 100)
+    @Column(name="name", length = 100, nullable = false)
     private String name;
 
-    @Column(name="password", nullable = false, length = 100)
+    @Column(name="password", length = 100, nullable = false)
     private String password;
 
-    @Column(name="phonenumber", nullable = false, length = 20)
+    @Column(name="phonenumber", length = 20, nullable = false)
     private String phonenumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="role", nullable = false, length = 20)
+    @Column(name="role", length = 20, nullable = false)
     private Role role;
 }
 
