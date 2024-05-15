@@ -12,7 +12,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="employee")
+@Table(name ="employees")
 public class EmployeeEntity extends AbstractUser{
 
     @Id
