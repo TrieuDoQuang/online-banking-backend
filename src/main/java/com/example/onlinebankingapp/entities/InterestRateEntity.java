@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -14,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @Table(name ="interest_rates")
-public class InterestRate {
+public class InterestRateEntity {
     @Id
     @Column(name="interestId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +33,7 @@ public class InterestRate {
 
     @Column(name="term", nullable = false)
     private Integer term;
+
+    @OneToMany(mappedBy = "interestRate", cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    private List<SavingAccountEntity> savingAccounts;
 }
