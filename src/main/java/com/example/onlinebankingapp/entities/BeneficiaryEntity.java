@@ -14,15 +14,17 @@ import lombok.experimental.SuperBuilder;
 public class BeneficiaryEntity {
 
     @Id
+    @Column(name = "beneficiaryId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long beneficiaryId;
 
-//    @Column(name = "name")
-//    private String name;
-//
-//    @Column(name = "accountnumber")
-//    private String accountNumber;
-//
-//    @Column(name = "cus_id")
-//    private Long cus_id;
+    @Column(name="name", length = 100, nullable = false)
+    private String name;
+
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "customerId", referencedColumnName = "customerId")
+    private CustomerEntity customer;
+
+    @Column(name="accountNumber", length = 20, nullable = false)
+    private String accountNumber;
 }
