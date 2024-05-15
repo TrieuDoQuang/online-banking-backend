@@ -13,7 +13,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @SuperBuilder
 @Table(name ="employee")
-public class EmployeeEntity {
+public class EmployeeEntity extends AbstractUser{
 
     @Id
     @Column(name="employeeId")
@@ -29,20 +29,8 @@ public class EmployeeEntity {
     @Column(name="dateOfBirth", length = 20, nullable = false)
     private Date dateofbirth;
 
-    @Column(name="email", length = 100, nullable = false, unique = true)
-    private String email;
-
-    @Column(name="name", length = 100, nullable = false)
-    private String name;
-
-    @Column(name="password", length = 100, nullable = false)
-    private String password;
-
-    @Column(name="phonenumber", length = 20, nullable = false)
-    private String phonenumber;
-
     @Enumerated(EnumType.STRING)
     @Column(name="role", length = 20, nullable = false)
-    private Role role;
+    private EmployeeRole role;
 }
 

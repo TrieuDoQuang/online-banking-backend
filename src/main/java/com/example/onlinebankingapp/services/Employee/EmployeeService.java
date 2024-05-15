@@ -2,14 +2,12 @@ package com.example.onlinebankingapp.services.Employee;
 
 import com.example.onlinebankingapp.dtos.EmployeeDTO;
 import com.example.onlinebankingapp.entities.EmployeeEntity;
-import com.example.onlinebankingapp.entities.Role;
+import com.example.onlinebankingapp.entities.EmployeeRole;
 import com.example.onlinebankingapp.repositories.EmployeeRepository;
 import com.example.onlinebankingapp.utils.DataParserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -23,8 +21,8 @@ public class EmployeeService implements IEmployeeService{
     }
 
     @Override
-    public List<EmployeeEntity> findAllEmployeesByRole(Role role) throws Exception {
-        return employeeRepository.getAllByRole(role);
+    public List<EmployeeEntity> findAllEmployeesByRole(EmployeeRole employeeRole) throws Exception {
+        return employeeRepository.getAllByRole(employeeRole);
     }
 
     @Override
@@ -47,7 +45,10 @@ public class EmployeeService implements IEmployeeService{
         java.util.Date parsedDate =  format.parse(employeeDTO.getDateOfBirth());
         formatDateOfBirth = new java.sql.Date(parsedDate.getTime());
         //Check Role
-        Role parsedRole = Role.valueOf(employeeDTO.getRole());
+        EmployeeRole parsedEmployeeRole;
+        try{
+            parsedEmployeeRole = EmployeeRole.valueOf(employeeDTO.getRole());
+        } catch (Exception e) {throw new Exception("Invalid employee role.");}
 
         EmployeeEntity newEmployeeEntity = EmployeeEntity.builder()
                 .address(employeeDTO.getAddress())
@@ -57,7 +58,7 @@ public class EmployeeService implements IEmployeeService{
                 .name(employeeDTO.getName())
                 .password(employeeDTO.getPassword())
                 .phonenumber(employeeDTO.getPhonenumber())
-                .role(parsedRole)
+                .role(parsedEmployeeRole)
                 .build();
 
         return employeeRepository.save(newEmployeeEntity);

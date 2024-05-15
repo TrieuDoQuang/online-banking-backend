@@ -1,6 +1,6 @@
 package com.example.onlinebankingapp.entities;
 
-public enum Role {
+public enum EmployeeRole {
     ADMINISTRATOR,
     STAFF
 }

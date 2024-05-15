@@ -1,6 +1,5 @@
 package com.example.onlinebankingapp.dtos;
 
-import com.example.onlinebankingapp.entities.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
