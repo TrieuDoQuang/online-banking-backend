@@ -47,4 +47,7 @@ public class PaymentAccountEntity {
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "customerId", referencedColumnName = "customerId", nullable = false)
     private CustomerEntity customer;
+
+    @OneToOne(mappedBy = "paymentAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private BeneficiaryEntity beneficiary;
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -25,6 +27,10 @@ public class BeneficiaryEntity {
     @JoinColumn(name = "customerId", referencedColumnName = "customerId")
     private CustomerEntity customer;
 
-    @Column(name="accountNumber", length = 20, nullable = false)
-    private String accountNumber;
+//    @Column(name="accountNumber", length = 20, nullable = false)
+//    private String accountNumber;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paymentAccountId")
+    private PaymentAccountEntity paymentAccount;
 }
