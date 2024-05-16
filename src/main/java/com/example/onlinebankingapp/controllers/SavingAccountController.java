@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/student")
+@RequestMapping("/api/savingAccounts")
 @RequiredArgsConstructor
 public class SavingAccountController {
 }
