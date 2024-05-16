@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.dtos;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -8,8 +9,9 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDTO extends AbstractUserDTO {
+public class CustomerDTO extends AbstractUserDTO {
 
-    @JsonProperty("role")
-    private String role;
+    @JsonProperty("pin_number")
+    private Long pinNumber;
+
 }

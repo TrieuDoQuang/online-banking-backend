@@ -16,24 +16,23 @@ import java.sql.Timestamp;
 @Table(name ="transactions")
 public class TransactionEntity {
     @Id
-    @Column(name = "transactionId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transactionId;
+    private Long id;
 
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @Column(name="transactionDateTime", nullable = false)
+    @Column(name="transaction_date_time", nullable = false)
     private Timestamp transactionDateTime;
 
-    @Column(name = "transactionRemark", nullable = false)
+    @Column(name = "transaction_remark", nullable = false)
     private String transactionRemark;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "senderId", referencedColumnName = "paymentAccountId",nullable = false)
+    @JoinColumn(name = "sender_id")
     private PaymentAccountEntity sender;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiverId", referencedColumnName = "paymentAccountId",nullable = false)
+    @JoinColumn(name = "receiver_id")
     private PaymentAccountEntity receiver;
 }

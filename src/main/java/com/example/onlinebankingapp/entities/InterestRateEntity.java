@@ -18,22 +18,15 @@ import java.util.List;
 @Table(name ="interest_rates")
 public class InterestRateEntity {
     @Id
-    @Column(name="interestId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long interestId;
+    private Long id;
 
     @Column(name="interestRate", nullable = false)
     private Double interestRate;
 
-    @Column(name="loanTitle", length = 50, nullable = false)
-    private String loanTitle;
-
-    @Column(name="savingTitle", length = 50, nullable = false)
-    private String savingTitle;
-
     @Column(name="term", nullable = false)
     private Integer term;
 
-    @OneToMany(mappedBy = "interestRate", cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    private List<SavingAccountEntity> savingAccounts;
+//    @OneToMany(mappedBy = "interestRate", cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+//    private List<SavingAccountEntity> savingAccounts;
 }

@@ -18,13 +18,12 @@ import java.util.List;
 @Table(name ="customers")
 public class CustomerEntity extends AbstractUser{
     @Id
-    @Column(name="customerId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long customerId;
+    private Long id;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PaymentAccountEntity> paymentAccounts;
+//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<PaymentAccountEntity> paymentAccounts;
 
-    @Column(name="pinNumber", length = 6)
+    @Column(name="pin_number", length = 6)
     private Integer pinNumber;
 }

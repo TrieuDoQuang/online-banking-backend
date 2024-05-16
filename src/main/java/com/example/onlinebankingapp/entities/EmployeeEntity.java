@@ -1,6 +1,8 @@
 package com.example.onlinebankingapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +15,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="admins")
-public class AdminEntity extends AbstractUser{
+@Table(name ="employees")
+public class EmployeeEntity extends AbstractUser{
     @Id
-    @Column(name="adminId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long adminId;
+    private Long id;
+
+    private String role;
 }

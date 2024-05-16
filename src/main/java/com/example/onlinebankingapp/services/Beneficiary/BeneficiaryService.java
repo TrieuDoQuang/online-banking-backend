@@ -1,4 +1,4 @@
 package com.example.onlinebankingapp.services.Beneficiary;
 
-public interface Beneficiary {
+public interface BeneficiaryService {
 }

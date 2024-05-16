@@ -10,19 +10,22 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
-
-    private String username;
-
-    private String password;
+public abstract class AbstractUserDTO {
 
     private String name;
+
+    private String password;
 
     @JsonProperty("date_of_birth")
     private Date dateOfBirth;
 
     private String email;
 
+    private String address;
+
     @JsonProperty("phone_number")
-    private Long phoneNumber;
+    private String phoneNumber;
+
+    @JsonProperty("citizen_id")
+    private String citizenId;
 }

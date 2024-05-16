@@ -16,21 +16,20 @@ import java.util.List;
 public class BeneficiaryEntity {
 
     @Id
-    @Column(name = "beneficiaryId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long beneficiaryId;
+    private Long id;
 
     @Column(name="name", length = 100, nullable = false)
     private String name;
 
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "customerId", referencedColumnName = "customerId")
+    @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
 
 //    @Column(name="accountNumber", length = 20, nullable = false)
 //    private String accountNumber;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "paymentAccountId")
+    @JoinColumn(name = "payment_account_id")
     private PaymentAccountEntity paymentAccount;
 }

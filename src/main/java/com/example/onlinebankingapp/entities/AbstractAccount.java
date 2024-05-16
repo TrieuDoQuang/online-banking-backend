@@ -21,15 +21,15 @@ import java.sql.Date;
 @MappedSuperclass
 @SuperBuilder
 public abstract class AbstractAccount {
-    @Column(name = "accountNumber", length = 10, nullable = false)
+    @Column(name = "account_number", length = 10, nullable = false)
     private String accountNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "accountStatus", nullable = false)
+    @Column(name = "account_status", nullable = false)
     private AccountStatus accountStatus;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "accountType", nullable = false)
+    @Column(name = "account_type", nullable = false)
     private AccountType accountType;
 
     @Column(name="dateClosed", nullable = false)

@@ -17,12 +17,12 @@ import lombok.experimental.SuperBuilder;
 public class AccountRewardEntity {
     @Id
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "rewardId", referencedColumnName = "rewardId", nullable = false)
+    @JoinColumn(name = "reward_id", nullable = false)
     private RewardEntity reward;
 
     @Id
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "accountId", referencedColumnName = "paymentAccountId", nullable = false)
+    @JoinColumn(name = "payment_account_id", nullable = false)
     private PaymentAccountEntity paymentAccount;
 
     @Column(name = "isValid", nullable = false)

@@ -16,21 +16,22 @@ import java.util.List;
 @SuperBuilder
 @Table(name ="rewards")
 public class RewardEntity {
-    @Id
-    @Column(name="rewardId")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rewardId;
 
-    @Column(name = "costPoint", nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "cost_point", nullable = false)
     private Integer costPoint;
 
-    @Column(name="rewardName", nullable = false)
+    @Column(name="reward_name", nullable = false)
     private String rewardName;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "rewardType", length = 20, nullable = false)
+    @Column(name = "reward_type", length = 20, nullable = false)
     private RewardType rewardType;
 
-//    @ManyToMany(mappedBy = "rewards", cascade = CascadeType.DETACH)
-//    private List<PaymentAccountEntity> paymentAccounts;
+//    @ManyToOne(cascade = CascadeType.DETACH)
+//    @JoinColumn(name = "payment_account_id")
+//    private PaymentAccountEntity paymentAccount;
 }

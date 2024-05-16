@@ -21,15 +21,15 @@ public abstract class AbstractUser {
     @Column(name="password", length = 100, nullable = false)
     private String password;
 
-    @Column(name="phonenumber", length = 20, nullable = false)
-    private String phonenumber;
+    @Column(name="phone_number", length = 20, nullable = false)
+    private String phoneNumber;
 
     @Column(name="address", length = 100, nullable = false)
     private String address;
 
-    @Column(name="citizenId", length = 20, nullable = false, unique = true)
+    @Column(name="citizen_id", length = 20, nullable = false, unique = true)
     private String citizenId;
 
-    @Column(name="dateOfBirth", length = 20, nullable = false)
-    private Date dateofbirth;
+    @Column(name="date_of_birth", length = 20, nullable = false)
+    private Date dateOfBirth;
 }
