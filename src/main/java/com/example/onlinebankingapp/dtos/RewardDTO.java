@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 public class RewardDTO extends UserDTO {
 

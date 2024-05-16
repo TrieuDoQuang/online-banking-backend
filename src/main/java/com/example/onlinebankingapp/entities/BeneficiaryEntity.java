@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -14,6 +16,21 @@ import lombok.experimental.SuperBuilder;
 public class BeneficiaryEntity {
 
     @Id
+    @Column(name = "beneficiaryId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long beneficiaryId;
+
+    @Column(name="name", length = 100, nullable = false)
+    private String name;
+
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "customerId", referencedColumnName = "customerId")
+    private CustomerEntity customer;
+
+//    @Column(name="accountNumber", length = 20, nullable = false)
+//    private String accountNumber;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paymentAccountId")
+    private PaymentAccountEntity paymentAccount;
 }

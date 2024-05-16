@@ -6,7 +6,7 @@ import lombok.*;
 @Data
 @Getter
 @Setter
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 public class SavingAccountDTO {
 
