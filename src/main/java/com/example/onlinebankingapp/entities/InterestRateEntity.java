@@ -27,6 +27,9 @@ public class InterestRateEntity {
     @Column(name="term", nullable = false)
     private Integer term;
 
+    @Column(name="min_balance", nullable = false)
+    private Double minBalance;
+
 //    @OneToMany(mappedBy = "interestRate", cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
 //    private List<SavingAccountEntity> savingAccounts;
 }

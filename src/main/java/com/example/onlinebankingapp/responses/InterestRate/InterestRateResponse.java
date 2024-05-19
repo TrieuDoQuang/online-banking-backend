@@ -19,11 +19,15 @@ public class InterestRateResponse {
     @JsonProperty("term")
     private Integer term;
 
+    @JsonProperty("min_balance")
+    private Double minBalance;
+
     public static InterestRateResponse fromInterestRate(InterestRateEntity interestRate){
         return InterestRateResponse.builder()
                 .id(interestRate.getId())
                 .interestRate(interestRate.getInterestRate())
                 .term(interestRate.getTerm())
+                .minBalance(interestRate.getMinBalance())
                 .build();
     }
 }
