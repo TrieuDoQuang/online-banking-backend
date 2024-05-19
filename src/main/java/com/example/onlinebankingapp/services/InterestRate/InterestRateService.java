@@ -12,4 +12,6 @@ public interface InterestRateService {
     List<InterestRateEntity> getAllInterestRates() throws Exception;
 
     InterestRateEntity getInterestRateById(Long id) throws Exception;
+
+    InterestRateEntity updateInterestRate(Long id, InterestRateDTO interestRateDTO) throws  Exception;
 }

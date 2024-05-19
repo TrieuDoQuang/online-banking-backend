@@ -17,21 +17,13 @@ public class InterestRateServiceImpl implements InterestRateService{
     @Override
     public InterestRateEntity insertInterestRate(InterestRateDTO interestRateDTO) throws DataNotFoundException {
         //data validation
-        //minimum term 1 month, maximum term 99 months
+        String validationResult = isInterestRateDTOValid(interestRateDTO);
+        if(!validationResult.equals("OK")){
+            throw new DataIntegrityViolationException(validationResult);
+        }
+
         Integer term = interestRateDTO.getTerm();
-        if(term < 1 || term > 99){
-            throw new DataIntegrityViolationException("Số kì phải lớn hơn 1 và bé hơn 99 tháng");
-        }
-
-        //min interest > 0, max < 999
         Double rate = interestRateDTO.getInterestRate();
-        if(rate <= 0 || rate > 999){
-            throw new DataIntegrityViolationException("Lãi suất phải lớn hơn 0% và bé hơn 999%");
-        }
-
-        if(interestRateRepository.existsByTermEqualsAndInterestRateEquals(term, rate)){
-            throw new DataIntegrityViolationException("Phương thức lãi xuất này đã tồn tại");
-        }
 
         InterestRateEntity newInterestRate = InterestRateEntity.builder()
                 .term(term)
@@ -50,8 +42,43 @@ public class InterestRateServiceImpl implements InterestRateService{
     public InterestRateEntity getInterestRateById(Long id) throws Exception {
         InterestRateEntity queryInterestRate = interestRateRepository.findInterestRateEntityById(id);
         if(queryInterestRate == null){
-            throw new Exception("Phương thức lãi xuất không tồn tại");
+            throw new DataNotFoundException("Phương thức lãi xuất không tồn tại");
         }
         return queryInterestRate;
+    }
+
+    @Override
+    public InterestRateEntity updateInterestRate(Long id, InterestRateDTO interestRateDTO) throws Exception {
+        InterestRateEntity updatedInterestRateEntity = getInterestRateById(id);
+
+        //data validation
+        String validationResult = isInterestRateDTOValid(interestRateDTO);
+        if(!validationResult.equals("OK")){
+            throw new DataIntegrityViolationException(validationResult);
+        }
+
+        updatedInterestRateEntity.setInterestRate(interestRateDTO.getInterestRate());
+        updatedInterestRateEntity.setTerm(interestRateDTO.getTerm());
+
+        return interestRateRepository.save(updatedInterestRateEntity);
+    }
+
+    private String isInterestRateDTOValid(InterestRateDTO interestRateDTO){
+        Integer term = interestRateDTO.getTerm();
+        Double rate = interestRateDTO.getInterestRate();
+
+        if(term < 1 || term > 99){
+            return "Số kì phải lớn hơn 1 và bé hơn 99 tháng";
+        }
+
+        if(rate <= 0 || rate > 999){
+            return "Lãi suất phải lớn hơn 0% và bé hơn 999%";
+        }
+
+        if(interestRateRepository.existsByTermEqualsAndInterestRateEquals(term, rate)){
+            return "Phương thức lãi xuất này đã tồn tại";
+        }
+
+        return "OK";
     }
 }

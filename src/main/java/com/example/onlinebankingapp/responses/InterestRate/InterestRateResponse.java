@@ -16,7 +16,7 @@ public class InterestRateResponse {
     @JsonProperty("interest_rate")
     private Double interestRate;
 
-    @JsonProperty("teerm")
+    @JsonProperty("term")
     private Integer term;
 
     public static InterestRateResponse fromInterestRate(InterestRateEntity interestRate){
