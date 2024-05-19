@@ -1,4 +1,4 @@
-package com.example.onlinebankingapp.responses.Customer;
+package com.example.onlinebankingapp.responses.InterestRate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,7 @@ import java.util.List;
 @Data
 @Builder
 @NoArgsConstructor
-public class CustomerListResponse {
-
-    private List<CustomerResponse> users;
+public class InterestRateListResponse {
+    private List<InterestRateResponse> interestRateResponses;
     private int totalPages;
-
 }

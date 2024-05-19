@@ -1,12 +1,9 @@
 package com.example.onlinebankingapp.entities;
 
-import com.example.onlinebankingapp.entities.enums.AccountType;
-import com.example.onlinebankingapp.entities.enums.RewardType;
+import com.example.onlinebankingapp.enums.RewardType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 @Getter
 @Setter

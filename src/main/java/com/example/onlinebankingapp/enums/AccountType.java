@@ -1,4 +1,4 @@
-package com.example.onlinebankingapp.entities.enums;
+package com.example.onlinebankingapp.enums;
 
 public enum AccountType {
     CLASSIC,

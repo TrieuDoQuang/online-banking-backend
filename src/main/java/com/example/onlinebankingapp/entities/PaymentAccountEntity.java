@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.Date;
-import java.util.List;
-
 @Getter
 @Setter
 @Entity
@@ -29,6 +26,11 @@ public class PaymentAccountEntity extends AbstractAccount{
     @JoinColumn(name = "customer_id", nullable = false)
     private CustomerEntity customer;
 
+    protected void onCreate() {
+        super.onCreate();
+        currentBalance = (double) 0;
+        rewardPoint = 0;
+    }
 
 //    @OneToMany(mappedBy = "paymentAccount", cascade = CascadeType.ALL)
 //    private List<SavingAccountEntity> savingAccounts;

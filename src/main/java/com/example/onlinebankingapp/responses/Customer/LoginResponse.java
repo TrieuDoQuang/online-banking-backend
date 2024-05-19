@@ -19,6 +19,7 @@ public class LoginResponse {
 
     @JsonProperty("refresh_token")
     private String refreshToken;
+    @Builder.Default
     private String tokenType = "Bearer";
     //user's detail
     private Long id;

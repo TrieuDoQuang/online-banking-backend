@@ -1,15 +1,9 @@
 package com.example.onlinebankingapp.dtos;
 
-import com.example.onlinebankingapp.entities.enums.AccountStatus;
-import com.example.onlinebankingapp.entities.enums.AccountType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.sql.Date;
-import java.sql.Time;
 
 @Data
 @Getter

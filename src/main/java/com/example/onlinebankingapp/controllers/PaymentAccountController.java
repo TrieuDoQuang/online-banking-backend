@@ -7,16 +7,14 @@ import com.example.onlinebankingapp.responses.PaymentAccount.PaymentAccountRespo
 import com.example.onlinebankingapp.responses.ResponseObject;
 import com.example.onlinebankingapp.services.PaymentAccount.PaymentAccountService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/paymentAccounts")
@@ -36,7 +34,7 @@ public class PaymentAccountController {
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .result(PaymentAccountResponse.fromPaymentAccount(paymentAccountResponse))
-                            .message("Thêm tài khoản thành công!")
+                            .message("Insert an Payment Account successfully!")
                             .status(HttpStatus.OK)
                             .build());
 
@@ -45,6 +43,22 @@ public class PaymentAccountController {
         }
     }
 
+    @PostMapping("/setDefaultAccount")
+    public ResponseEntity<?> setDefaultPaymentAccount(
+            @Valid @RequestBody PaymentAccountDTO paymentAccountDTO
+    ) {
+        try {
+            paymentAccountService.setDefaultPaymentAccount(paymentAccountDTO.getCustomerId(), paymentAccountDTO.getAccountNumber());
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .message("Set Default Payment Account Successfully!")
+                            .status(HttpStatus.OK)
+                            .build());
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     @GetMapping("")
     public ResponseEntity<?> getAllPaymentAccounts() {
@@ -61,7 +75,7 @@ public class PaymentAccountController {
                     .build();
 
             return ResponseEntity.ok().body(ResponseObject.builder()
-                    .message("Get PaymentAccount list successfully")
+                    .message("Get Payment Account list successfully")
                     .status(HttpStatus.OK)
                     .result(paymentAccountListResponse)
                     .build());
@@ -69,13 +83,30 @@ public class PaymentAccountController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/getDefaultAccount/{id}")
+    public ResponseEntity<?> getDefaultPaymentAccount(@Valid @PathVariable("id") Long customerId) {
+        try {
+
+            PaymentAccountEntity paymentAccount = paymentAccountService.getDefaultPaymentAccount(customerId);
+
+            return ResponseEntity.ok().body(ResponseObject.builder()
+                    .message("Get Payment Account list successfully")
+                    .status(HttpStatus.OK)
+                    .result(PaymentAccountResponse.fromPaymentAccount(paymentAccount))
+                    .build());
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getPaymentAccountById(@Valid @PathVariable("id") Long paymentAccountId) {
         try {
             PaymentAccountEntity existingPaymentAccount = paymentAccountService.getPaymentAccountById(paymentAccountId);
             return ResponseEntity.ok(ResponseObject.builder()
                     .result(PaymentAccountResponse.fromPaymentAccount(existingPaymentAccount))
-                    .message("Get payment account successfully")
+                    .message("Get Payment Account successfully")
                     .status(HttpStatus.OK)
                     .build());
         } catch(Exception e) {
