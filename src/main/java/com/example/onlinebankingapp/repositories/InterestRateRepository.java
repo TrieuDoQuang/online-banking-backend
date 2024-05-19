@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InterestRateRepository extends JpaRepository<InterestRateEntity, Long> {
-    boolean existsByTermEqualsAndInterestRateEquals(Integer term, Double interestRate);
+    boolean existsByTermEqualsAndInterestRateEqualsAndMinBalanceEquals(Integer term, Double interestRate, Double minBalance);
 
     InterestRateEntity findInterestRateEntityById(Long id);
 }

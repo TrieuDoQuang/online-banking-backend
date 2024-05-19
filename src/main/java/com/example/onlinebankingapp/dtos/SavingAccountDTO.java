@@ -9,10 +9,9 @@ import lombok.*;
 @Data
 @Getter
 @Setter
-//@AllArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 public class SavingAccountDTO extends AbstractAccountDTO {
-
     @JsonProperty("min_balance")
     private int minBalance;
 
@@ -27,6 +26,4 @@ public class SavingAccountDTO extends AbstractAccountDTO {
 
     @JsonProperty("interest_rate_id")
     private Long interestRateId;
-
-
 }

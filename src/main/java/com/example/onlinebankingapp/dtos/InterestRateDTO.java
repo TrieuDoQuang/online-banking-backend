@@ -13,4 +13,6 @@ public class InterestRateDTO {
     private Double interestRate;
     @JsonProperty("term")
     private Integer term;
+    @JsonProperty("min_balance")
+    private Double minBalance;
 }

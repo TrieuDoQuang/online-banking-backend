@@ -16,9 +16,6 @@ public class SavingAccountEntity extends AbstractAccount{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="min_balance", nullable = false)
-    private int minBalance;
-
     @Column(name="saving_current_amount", nullable = false)
     private Double savingCurrentAmount;
 

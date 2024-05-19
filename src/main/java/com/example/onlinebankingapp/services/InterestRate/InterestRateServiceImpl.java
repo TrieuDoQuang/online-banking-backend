@@ -22,12 +22,10 @@ public class InterestRateServiceImpl implements InterestRateService{
             throw new DataIntegrityViolationException(validationResult);
         }
 
-        Integer term = interestRateDTO.getTerm();
-        Double rate = interestRateDTO.getInterestRate();
-
         InterestRateEntity newInterestRate = InterestRateEntity.builder()
-                .term(term)
-                .interestRate(rate)
+                .term(interestRateDTO.getTerm())
+                .interestRate(interestRateDTO.getInterestRate())
+                .minBalance(interestRateDTO.getMinBalance())
                 .build();
 
         return interestRateRepository.save(newInterestRate);
@@ -59,6 +57,7 @@ public class InterestRateServiceImpl implements InterestRateService{
 
         updatedInterestRateEntity.setInterestRate(interestRateDTO.getInterestRate());
         updatedInterestRateEntity.setTerm(interestRateDTO.getTerm());
+        updatedInterestRateEntity.setMinBalance(interestRateDTO.getMinBalance());
 
         return interestRateRepository.save(updatedInterestRateEntity);
     }
@@ -66,6 +65,7 @@ public class InterestRateServiceImpl implements InterestRateService{
     private String isInterestRateDTOValid(InterestRateDTO interestRateDTO){
         Integer term = interestRateDTO.getTerm();
         Double rate = interestRateDTO.getInterestRate();
+        Double minBalance = interestRateDTO.getMinBalance();
 
         if(term < 1 || term > 99){
             return "Số kì phải lớn hơn 1 và bé hơn 99 tháng";
@@ -75,7 +75,11 @@ public class InterestRateServiceImpl implements InterestRateService{
             return "Lãi suất phải lớn hơn 0% và bé hơn 999%";
         }
 
-        if(interestRateRepository.existsByTermEqualsAndInterestRateEquals(term, rate)){
+        if(minBalance <= 100000 || minBalance > 999999999){
+            return "Số tiền gửi tối thiểu phải lớn hơn 100.000 và bé hơn 999.999.999";
+        }
+
+        if(interestRateRepository.existsByTermEqualsAndInterestRateEqualsAndMinBalanceEquals(term, rate, minBalance)){
             return "Phương thức lãi xuất này đã tồn tại";
         }
 
