@@ -43,7 +43,7 @@ public class InterestRateServiceImpl implements InterestRateService{
 
     @Override
     public List<InterestRateEntity> getAllInterestRates() throws Exception {
-        return null;
+        return interestRateRepository.findAll();
     }
 
     @Override
