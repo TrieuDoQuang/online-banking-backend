@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
