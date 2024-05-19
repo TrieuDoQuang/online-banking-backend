@@ -1,11 +1,15 @@
 package com.example.onlinebankingapp.entities;
 
+import com.example.onlinebankingapp.enums.AccountStatus;
+import com.example.onlinebankingapp.enums.AccountType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,6 +19,8 @@ import java.sql.Timestamp;
 @SuperBuilder
 @Table(name ="transactions")
 public class TransactionEntity {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,4 +41,11 @@ public class TransactionEntity {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private PaymentAccountEntity receiver;
+
+    @PrePersist
+    protected void onCreate() {
+        transactionDateTime = Timestamp.from(Instant.now());
+    }
+
+
 }

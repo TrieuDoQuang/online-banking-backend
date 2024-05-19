@@ -1,4 +1,4 @@
-package com.example.onlinebankingapp.responses.User;
+package com.example.onlinebankingapp.responses.Customer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -23,11 +23,9 @@ public class LoginResponse {
     private String tokenType = "Bearer";
     //user's detail
     private Long id;
-    private String username;
 
     @JsonProperty("full_name")
     private String fullName;
 
 
-    private List<String> roles;
 }
