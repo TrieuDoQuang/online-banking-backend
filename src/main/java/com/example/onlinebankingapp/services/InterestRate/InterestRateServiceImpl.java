@@ -48,6 +48,10 @@ public class InterestRateServiceImpl implements InterestRateService{
 
     @Override
     public InterestRateEntity getInterestRateById(Long id) throws Exception {
-        return null;
+        InterestRateEntity queryInterestRate = interestRateRepository.findInterestRateEntityById(id);
+        if(queryInterestRate == null){
+            throw new Exception("Phương thức lãi xuất không tồn tại");
+        }
+        return queryInterestRate;
     }
 }

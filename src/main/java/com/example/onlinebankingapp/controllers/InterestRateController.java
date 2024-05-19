@@ -59,4 +59,18 @@ public class InterestRateController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getInterestRateById(@Valid @PathVariable("id") Long interestRate_Id){
+        try{
+            InterestRateEntity queryInterestRate = interestRateService.getInterestRateById(interestRate_Id);
+            return ResponseEntity.ok().body(ResponseObject.builder()
+                            .status(HttpStatus.OK)
+                            .message("Lấy phương thức lãi xuất thành công!")
+                            .result(InterestRateResponse.fromInterestRate(queryInterestRate))
+                            .build());
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
