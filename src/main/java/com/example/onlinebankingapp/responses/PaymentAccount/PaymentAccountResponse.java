@@ -23,10 +23,10 @@ public class PaymentAccountResponse {
     @JsonProperty("account_type")
     private String accountType;
 
-    @JsonProperty("dateClosed")
+    @JsonProperty("date_closed")
     private Date dateClosed;
 
-    @JsonProperty("dateOpened")
+    @JsonProperty("date_opened")
     private Date dateOpened;
 
     @JsonProperty("current_balance")

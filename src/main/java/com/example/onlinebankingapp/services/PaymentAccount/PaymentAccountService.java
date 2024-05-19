@@ -11,11 +11,13 @@ public interface PaymentAccountService {
 
     PaymentAccountEntity insertPaymentAccount(PaymentAccountDTO paymentAccountDTO) throws DataNotFoundException;
 
-    List<PaymentAccountEntity> getAllPaymentAccounts() throws Exception;
+    List<PaymentAccountEntity> getAllPaymentAccounts() throws DataNotFoundException;
 
-    PaymentAccountEntity getPaymentAccountById(long id) throws Exception;
+    void setDefaultPaymentAccount(long customerId, String accountNumber) throws DataNotFoundException;
 
+    PaymentAccountEntity getPaymentAccountById(long id) throws DataNotFoundException;
 
+    PaymentAccountEntity getDefaultPaymentAccount(long customerId) throws DataNotFoundException;
 
 
 }
