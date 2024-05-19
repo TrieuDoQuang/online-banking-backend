@@ -23,10 +23,10 @@ public class TransactionDTO {
     @JsonProperty("transaction_remark")
     private String transactionRemark;
 
-    @JsonProperty("sender_id")
-    private long senderId;
+    @JsonProperty("sender_account_number")
+    private String senderAccountNumber;
 
-    @JsonProperty("receiver_id")
-    private long receiverId;
+    @JsonProperty("receiver_account_number")
+    private String receiverAccountNumber;
 
 }

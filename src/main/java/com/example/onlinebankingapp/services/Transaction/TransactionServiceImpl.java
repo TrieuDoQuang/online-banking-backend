@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -30,19 +31,17 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionRemark(transactionDTO.getTransactionRemark())
                 .build();
 
-        long senderId = transactionDTO.getSenderId();
-        long receiverId = transactionDTO.getReceiverId();
+        String senderAccountNumber = transactionDTO.getSenderAccountNumber();
+        String receiverAccountNumber = transactionDTO.getReceiverAccountNumber();
 
-        if(senderId == receiverId) {
+        if(Objects.equals(senderAccountNumber, receiverAccountNumber)) {
             throw new BadRequestException("Cannot make transaction to your current account");
         }
 
-        Optional<PaymentAccountEntity> optionalSender = paymentAccountRepository.findById(senderId);
-        Optional<PaymentAccountEntity> optionalReceiver = paymentAccountRepository.findById(receiverId);
+        PaymentAccountEntity sender = paymentAccountRepository.getPaymentAccountByAccountNumber(senderAccountNumber);
+        PaymentAccountEntity receiver = paymentAccountRepository.getPaymentAccountByAccountNumber(receiverAccountNumber);
 
-        if(optionalReceiver.isPresent() && optionalSender.isPresent()) {
-            PaymentAccountEntity sender = optionalSender.get();
-            PaymentAccountEntity receiver = optionalReceiver.get();
+        if(sender != null && receiver != null) {
 
             newTransaction.setSender(sender);
             newTransaction.setReceiver(receiver);
