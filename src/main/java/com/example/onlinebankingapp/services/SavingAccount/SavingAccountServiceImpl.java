@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -33,6 +34,14 @@ public class SavingAccountServiceImpl implements SavingAccountService {
             throw new DataIntegrityViolationException(dataValidationResult);
         }
 
+        PaymentAccountEntity paymentAccountReference = paymentAccountRepository.getReferenceById(savingAccountDTO.getPaymentAccountId());
+        InterestRateEntity interestRateReference = interestRateRepository.getReferenceById(savingAccountDTO.getInterestRateId());
+
+        //Kiểm tra tiền chuyển có đạt mức tối thiểu của interest rate
+        if(savingAccountDTO.getSavingInitialAmount() < interestRateReference.getMinBalance()){
+            throw new DataIntegrityViolationException("The deposit amount is insufficient for this interest rate package");
+        }
+
         SavingAccountEntity newSavingAccountEntity = SavingAccountEntity.builder()
                 .savingInitialAmount(savingAccountDTO.getSavingInitialAmount())
                 .savingCurrentAmount(savingAccountDTO.getSavingInitialAmount())
@@ -41,14 +50,18 @@ public class SavingAccountServiceImpl implements SavingAccountService {
                 .accountNumber(generateRandomSavingAccountNumber())
                 .dateClosed(new java.sql.Date(System.currentTimeMillis()))
                 .dateOpened(new java.sql.Date(System.currentTimeMillis()))
+                .paymentAccount(paymentAccountReference)
+                .interestRate(interestRateReference)
                 .build();
 
-        PaymentAccountEntity paymentAccountReference = paymentAccountRepository.getReferenceById(savingAccountDTO.getPaymentAccountId());
-        InterestRateEntity interestRateReference = interestRateRepository.getReferenceById(savingAccountDTO.getInterestRateId());
+        //Giảm số tiền trong payment account tương ứng với tiền gửi của saving account
+        Double newPaymentAccountBalance = paymentAccountReference.getCurrentBalance() - newSavingAccountEntity.getSavingInitialAmount();
+        if(newPaymentAccountBalance < 0) {
+            throw new DataIntegrityViolationException("Payment account does not have enough balance for the required amount in saving acocunt");
+        }
+        paymentAccountReference.setCurrentBalance(newPaymentAccountBalance);
 
-        newSavingAccountEntity.setPaymentAccount(paymentAccountReference);
-        newSavingAccountEntity.setInterestRate(interestRateReference);
-
+        paymentAccountRepository.save(paymentAccountReference);
         return savingAccountRepository.save(newSavingAccountEntity);
     }
 
@@ -58,7 +71,17 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     }
 
     @Override
-    public SavingAccountEntity getAllSavingAccounts() throws Exception {
+    public List<SavingAccountEntity> getSavingAccountsOfUser(Long userId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<SavingAccountEntity> getSavingAccountsOfPaymentAccount(Long paymentAccountId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<SavingAccountEntity> getAllSavingAccounts() throws Exception {
         return null;
     }
 
