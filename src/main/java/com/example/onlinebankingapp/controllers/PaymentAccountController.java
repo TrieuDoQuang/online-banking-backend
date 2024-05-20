@@ -29,7 +29,6 @@ public class PaymentAccountController {
             @Valid @RequestBody PaymentAccountDTO paymentAccountDTO
     ) {
         try {
-
             PaymentAccountEntity paymentAccountResponse = paymentAccountService.insertPaymentAccount(paymentAccountDTO);
             return ResponseEntity.ok(
                     ResponseObject.builder()

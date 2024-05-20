@@ -2,17 +2,67 @@ package com.example.onlinebankingapp.services.SavingAccount;
 
 import com.example.onlinebankingapp.dtos.InterestRateDTO;
 import com.example.onlinebankingapp.dtos.SavingAccountDTO;
+import com.example.onlinebankingapp.entities.InterestRateEntity;
+import com.example.onlinebankingapp.entities.PaymentAccountEntity;
 import com.example.onlinebankingapp.entities.SavingAccountEntity;
+import com.example.onlinebankingapp.enums.AccountStatus;
+import com.example.onlinebankingapp.enums.AccountType;
+import com.example.onlinebankingapp.exceptions.DataNotFoundException;
+import com.example.onlinebankingapp.repositories.InterestRateRepository;
+import com.example.onlinebankingapp.repositories.PaymentAccountRepository;
+import com.example.onlinebankingapp.repositories.SavingAccountRepository;
+import com.example.onlinebankingapp.services.InterestRate.InterestRateService;
+import com.example.onlinebankingapp.services.PaymentAccount.PaymentAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class SavingAccountServiceImpl implements SavingAccountService {
-    @Override
-    public SavingAccountEntity insertSavingAccount(SavingAccountDTO savingAccountDTO) {
+    private final SavingAccountRepository savingAccountRepository;
+    private final PaymentAccountRepository paymentAccountRepository;
+    private final InterestRateRepository interestRateRepository;
 
-        return null;
+    @Override
+    public SavingAccountEntity insertSavingAccount(SavingAccountDTO savingAccountDTO) throws Exception {
+        String dataValidationResult = isSavingAccountDTOValid(savingAccountDTO);
+        if(!dataValidationResult.equals("OK")){
+            throw new DataIntegrityViolationException(dataValidationResult);
+        }
+
+        PaymentAccountEntity paymentAccountReference = paymentAccountRepository.getReferenceById(savingAccountDTO.getPaymentAccountId());
+        InterestRateEntity interestRateReference = interestRateRepository.getReferenceById(savingAccountDTO.getInterestRateId());
+
+        //Kiểm tra tiền chuyển có đạt mức tối thiểu của interest rate
+        if(savingAccountDTO.getSavingInitialAmount() < interestRateReference.getMinBalance()){
+            throw new DataIntegrityViolationException("The deposit amount is insufficient for this interest rate package");
+        }
+
+        SavingAccountEntity newSavingAccountEntity = SavingAccountEntity.builder()
+                .savingInitialAmount(savingAccountDTO.getSavingInitialAmount())
+                .savingCurrentAmount(savingAccountDTO.getSavingInitialAmount())
+                .accountStatus(AccountStatus.ACTIVE)
+                .accountType(AccountType.CLASSIC)
+                .accountNumber(generateRandomSavingAccountNumber())
+                .dateClosed(new java.sql.Date(System.currentTimeMillis()))
+                .dateOpened(new java.sql.Date(System.currentTimeMillis()))
+                .paymentAccount(paymentAccountReference)
+                .interestRate(interestRateReference)
+                .build();
+
+        //Giảm số tiền trong payment account tương ứng với tiền gửi của saving account
+        Double newPaymentAccountBalance = paymentAccountReference.getCurrentBalance() - newSavingAccountEntity.getSavingInitialAmount();
+        if(newPaymentAccountBalance < 0) {
+            throw new DataIntegrityViolationException("Payment account does not have enough balance for the required amount in saving acocunt");
+        }
+        paymentAccountReference.setCurrentBalance(newPaymentAccountBalance);
+
+        paymentAccountRepository.save(paymentAccountReference);
+        return savingAccountRepository.save(newSavingAccountEntity);
     }
 
     @Override
@@ -21,8 +71,18 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     }
 
     @Override
-    public SavingAccountEntity getAllSavingAccounts() throws Exception {
+    public List<SavingAccountEntity> getSavingAccountsOfUser(Long userId) throws Exception {
         return null;
+    }
+
+    @Override
+    public List<SavingAccountEntity> getSavingAccountsOfPaymentAccount(Long paymentAccountId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<SavingAccountEntity> getAllSavingAccounts() throws Exception {
+        return savingAccountRepository.findAll();
     }
 
     @Override
@@ -31,22 +91,33 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     }
 
     private String isSavingAccountDTOValid(SavingAccountDTO savingAccountDTO){
-//        Integer term = interestRateDTO.getTerm();
-//        Double rate = interestRateDTO.getInterestRate();
-//
-//        if(term < 1 || term > 99){
-//            return "Số kì phải lớn hơn 1 và bé hơn 99 tháng";
-//        }
-//
-//        if(rate <= 0 || rate > 999){
-//            return "Lãi suất phải lớn hơn 0% và bé hơn 999%";
-//        }
-//
-//        if(interestRateRepository.existsByTermEqualsAndInterestRateEquals(term, rate)){
-//            return "Phương thức lãi xuất này đã tồn tại";
-//        }
+        Double savingInitialAmount = savingAccountDTO.getSavingInitialAmount();
+        String accountType = savingAccountDTO.getAccountType();
+
+        if(savingInitialAmount <= 0){
+            return "Số tiền gửi phải lớn hơn 0";
+        }
+
+        try {
+            AccountType.valueOf(accountType);
+        } catch (Exception e) {
+            return "Loại tài khoản không hợp lệ";
+        }
 
         return "OK";
     }
 
+    private String generateRandomSavingAccountNumber(){
+        Random random = new Random();
+        StringBuilder cardNumber;
+        do {
+            cardNumber = new StringBuilder("SA");
+            for(int i = 0; i < 8; i++){
+                int randomNum = random.nextInt(10);
+                cardNumber.append(Integer.toString(randomNum));
+            }
+        } while (savingAccountRepository.existsByAccountNumberEquals(cardNumber.toString()));
+
+        return cardNumber.toString();
+    }
 }

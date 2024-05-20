@@ -11,8 +11,6 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class AbstractAccountDTO {
-
-
     @JsonProperty("account_number")
     private String accountNumber;
 

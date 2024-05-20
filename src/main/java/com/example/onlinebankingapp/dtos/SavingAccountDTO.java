@@ -7,14 +7,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SavingAccountDTO extends AbstractAccountDTO {
-    @JsonProperty("min_balance")
-    private int minBalance;
-
     @JsonProperty("saving_current_amount")
     private Double savingCurrentAmount;
 
