@@ -82,7 +82,7 @@ public class SavingAccountServiceImpl implements SavingAccountService {
 
     @Override
     public List<SavingAccountEntity> getAllSavingAccounts() throws Exception {
-        return null;
+        return savingAccountRepository.findAll();
     }
 
     @Override
