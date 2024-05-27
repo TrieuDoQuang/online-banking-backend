@@ -9,5 +9,5 @@ import java.util.List;
 public interface TokenRepository extends JpaRepository<TokenEntity, Long> {
     List<TokenEntity> findByCustomer(CustomerEntity customer);
     TokenEntity findByToken(String token);
-    TokenEntity findByRefreshToken(String token);
+    TokenEntity findByRefreshToken(String refreshToken);
 }
