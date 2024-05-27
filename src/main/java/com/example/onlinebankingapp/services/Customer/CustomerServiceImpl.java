@@ -67,6 +67,13 @@ public class CustomerServiceImpl implements CustomerService {
         String citizenId = customerDTO.getCitizenId();
         String password = customerDTO.getPassword();
         String encodedPassword = passwordEncoder.encode(password);
+        if (customerRepository.existsByEmail(email)){
+            throw new DataIntegrityViolationException("Exist customer with email");
+        }
+        if (customerRepository.existsByCitizenId(citizenId)) {
+            throw new DataIntegrityViolationException("Exist customer with citizen id");
+        }
+
         if (customerRepository.existsByEmailAndCitizenId(email, citizenId)) {
             throw new DataIntegrityViolationException("Exists customer account!");
         }
@@ -106,9 +113,20 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerEntity getCustomerDetailsFromRefreshToken(String refreshToken) throws Exception {
+//        logger.debug("Searching for refresh token: {}", refreshToken);
+
         TokenEntity existingToken = tokenRepository.findByRefreshToken(refreshToken);
+
+        if (existingToken == null) {
+//            logger.error("Refresh token not found: {}", refreshToken);
+            throw new Exception("Refresh token not found");
+        }
+
+//        logger.debug("Token found: {}", existingToken.getToken());
+
         return getCustomerDetailsFromToken(existingToken.getToken());
     }
+
 
 
 

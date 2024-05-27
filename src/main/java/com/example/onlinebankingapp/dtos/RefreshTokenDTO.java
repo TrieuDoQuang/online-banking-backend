@@ -1,6 +1,7 @@
 package com.example.onlinebankingapp.dtos;
 
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 
 @Data//toString
@@ -10,6 +11,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class RefreshTokenDTO {
-    @NotBlank
+    @JsonProperty("refresh_token")
     private String refreshToken;
 }
