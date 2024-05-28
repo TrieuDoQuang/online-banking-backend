@@ -1,4 +1,5 @@
 package com.example.onlinebankingapp.controllers;
+import com.example.onlinebankingapp.dtos.ChangePasswordCustomerDTO;
 import com.example.onlinebankingapp.dtos.CustomerDTO;
 import com.example.onlinebankingapp.dtos.CustomerLoginDTO;
 import com.example.onlinebankingapp.dtos.RefreshTokenDTO;
@@ -114,6 +115,21 @@ public class CustomerController {
 
     }
 
+    @PutMapping("/changePassword/{customerId}")
+    public ResponseEntity<?> changePassword (@PathVariable Long customerId, @Valid @RequestBody ChangePasswordCustomerDTO customerDTO ) throws Exception {
+        try {
+            customerService.changePassword(customerId, customerDTO);
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .result(customerDTO)
+                            .message("Change password successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        }
+    }
 
     private boolean isMobileDevice(String customerAgent) {
         // Kiểm tra Customer-Agent header để xác định thiết bị di động
