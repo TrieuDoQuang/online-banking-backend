@@ -113,6 +113,21 @@ public class PaymentAccountController {
         }
     }
 
+    @GetMapping("/getByAccountNumber/{accountNumber}")
+    public ResponseEntity<?> getCustomerNameByAccountNumber(@Valid @PathVariable("accountNumber") String accountNumber) {
+        try {
+            PaymentAccountEntity existingPaymentAccount = paymentAccountService.getPaymentAccountByAccountNumber(accountNumber);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .result(existingPaymentAccount.getCustomer().getName())
+                    .message("Get Payment Account successfully")
+                    .status(HttpStatus.OK)
+                    .build());
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
     @GetMapping("/getPaymentAccounts/{id}")
     public ResponseEntity<?> getPaymentAccountsByCustomerId(@Valid @PathVariable("id") Long customerId){
         try {

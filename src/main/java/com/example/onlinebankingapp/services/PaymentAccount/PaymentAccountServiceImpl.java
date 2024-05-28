@@ -81,6 +81,15 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
     }
 
     @Override
+    public PaymentAccountEntity getPaymentAccountByAccountNumber(String accountNumber) throws DataNotFoundException {
+        PaymentAccountEntity paymentAccount = paymentAccountRepository.getPaymentAccountByAccountNumber(accountNumber);
+        if(paymentAccount != null) {
+            return paymentAccount;
+        }
+        throw new DataNotFoundException("Cannot find Payment Account with account Number: " + accountNumber);
+    }
+
+    @Override
     public PaymentAccountEntity getDefaultPaymentAccount(long customerId) throws DataNotFoundException {
         Optional<PaymentAccountEntity> optionalPaymentAccount = paymentAccountRepository.getPaymentAccountByStatus(customerId, AccountStatus.DEFAULT);
         if(optionalPaymentAccount.isPresent()) {

@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 
@@ -98,6 +95,25 @@ public class CustomerController {
 
         }
     }
+
+    @GetMapping("/getPinNumber/{customerId}")
+    public ResponseEntity<?> getPinNumberByCustomerId(@Valid @PathVariable("customerId") long customerId)
+    {
+        try {
+            CustomerEntity customerEntityResponse = customerService.getCustomerById(customerId);
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .result(customerEntityResponse.getPinNumber())
+                            .message("get Pin Number successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+
+    }
+
 
     private boolean isMobileDevice(String customerAgent) {
         // Kiểm tra Customer-Agent header để xác định thiết bị di động

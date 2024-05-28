@@ -133,12 +133,19 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerEntity> getAllCustomers() throws Exception {
-        return null;
+        return customerRepository.findAll();
     }
 
     @Override
     public CustomerEntity getCustomerById(long id) throws Exception {
-        return null;
+
+        Optional<CustomerEntity> optionalCustomer = customerRepository.findById(id);
+
+        if(optionalCustomer.isPresent()) {
+            return optionalCustomer.get();
+        }
+
+        throw new Exception("Cannot find Customer with id: " + id);
     }
 
     @Override
