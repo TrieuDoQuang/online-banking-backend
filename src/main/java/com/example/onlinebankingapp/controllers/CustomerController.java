@@ -2,6 +2,7 @@ package com.example.onlinebankingapp.controllers;
 import com.example.onlinebankingapp.dtos.CustomerDTO;
 import com.example.onlinebankingapp.dtos.CustomerLoginDTO;
 import com.example.onlinebankingapp.dtos.RefreshTokenDTO;
+import com.example.onlinebankingapp.dtos.ChangePasswordCustomerDTO;
 import com.example.onlinebankingapp.entities.CustomerEntity;
 import com.example.onlinebankingapp.entities.TokenEntity;
 import com.example.onlinebankingapp.responses.Customer.LoginResponse;
@@ -14,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 
@@ -98,6 +96,23 @@ public class CustomerController {
 
         }
     }
+
+    @PutMapping("/changePassword/{customerId}")
+    public ResponseEntity<?> changePassword (@PathVariable Long customerId, @Valid @RequestBody ChangePasswordCustomerDTO customerDTO ) throws Exception {
+        try {
+            customerService.changePassword(customerId, customerDTO);
+            return ResponseEntity.ok(
+                    ResponseObject.builder()
+                            .result(customerDTO)
+                            .message("Change password successfully")
+                            .status(HttpStatus.OK)
+                            .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        }
+    }
+
 
     private boolean isMobileDevice(String customerAgent) {
         // Kiểm tra Customer-Agent header để xác định thiết bị di động
