@@ -112,4 +112,30 @@ public class PaymentAccountController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/getPaymentAccounts/{id}")
+    public ResponseEntity<?> getPaymentAccountsByCustomerId(@Valid @PathVariable("id") Long customerId){
+        try {
+            List<PaymentAccountEntity> paymentAccounts = paymentAccountService.getPaymentAccountsByCustomerId(customerId);
+
+            List<PaymentAccountResponse> paymentAccountResponse = paymentAccounts.stream()
+                    .map(PaymentAccountResponse::fromPaymentAccount)
+                    .toList();
+
+            PaymentAccountListResponse paymentAccountListResponse = PaymentAccountListResponse
+                    .builder()
+                    .paymentAccounts(paymentAccountResponse)
+                    .build();
+
+            return ResponseEntity.ok().body(ResponseObject.builder()
+                    .message("Get Payment Account list by CustomerID successfully")
+                    .status(HttpStatus.OK)
+                    .result(paymentAccountListResponse)
+                    .build());
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        }
+    }
 }

@@ -7,7 +7,6 @@ import com.example.onlinebankingapp.enums.AccountStatus;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import com.example.onlinebankingapp.repositories.CustomerRepository;
 import com.example.onlinebankingapp.repositories.PaymentAccountRepository;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -88,5 +87,14 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
             return optionalPaymentAccount.get();
         }
         throw new DataNotFoundException("Cannot find Default Payment Account");
+    }
+
+    @Override
+    public List<PaymentAccountEntity> getPaymentAccountsByCustomerId(long customerId) throws DataNotFoundException {
+        List<PaymentAccountEntity> paymentAccounts = paymentAccountRepository.getPaymentAccountsByCustomerId(customerId);
+        if (paymentAccounts.isEmpty()) {
+            throw new DataNotFoundException("Cannot find Payment Accounts of Customer");
+        }
+        return paymentAccounts;
     }
 }
