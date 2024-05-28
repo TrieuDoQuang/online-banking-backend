@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,5 +21,7 @@ public interface PaymentAccountRepository extends JpaRepository<PaymentAccountEn
     @Query("SELECT p FROM PaymentAccountEntity p WHERE p.accountStatus = :accountStatus and p.customer.id = :customerId")
     Optional<PaymentAccountEntity> getPaymentAccountByStatus(long customerId, AccountStatus accountStatus);
 
+    @Query ("SELECT p FROM PaymentAccountEntity p WHERE p.customer.id = :customerId")
+    List<PaymentAccountEntity> getPaymentAccountsByCustomerId(long customerId);
     PaymentAccountEntity getPaymentAccountByAccountNumber(String AccountNumber);
 }

@@ -19,5 +19,6 @@ public interface PaymentAccountService {
 
     PaymentAccountEntity getDefaultPaymentAccount(long customerId) throws DataNotFoundException;
 
+    List<PaymentAccountEntity> getPaymentAccountsByCustomerId(long customerId) throws  DataNotFoundException;
 
 }
