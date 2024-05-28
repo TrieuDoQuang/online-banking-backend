@@ -1,6 +1,7 @@
 package com.example.onlinebankingapp.services.Customer;
 
 import com.example.onlinebankingapp.components.JwtTokenUtils;
+import com.example.onlinebankingapp.dtos.ChangePasswordCustomerDTO;
 import com.example.onlinebankingapp.dtos.CustomerDTO;
 import com.example.onlinebankingapp.dtos.CustomerLoginDTO;
 import com.example.onlinebankingapp.entities.CustomerEntity;
@@ -23,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.example.onlinebankingapp.utils.ValidationUtils.isValidEmail;
+import static com.example.onlinebankingapp.utils.ValidationUtils.isValidPassword;
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
 
@@ -62,10 +65,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public CustomerEntity insertCustomer(CustomerDTO customerDTO) throws DataNotFoundException, ParseException {
+    public CustomerEntity insertCustomer(CustomerDTO customerDTO) throws DataNotFoundException, ParseException, InvalidPasswordException {
         String email = customerDTO.getEmail();
         String citizenId = customerDTO.getCitizenId();
         String password = customerDTO.getPassword();
+        if(!isValidPassword(password)) {
+            throw new InvalidPasswordException("Password must satisfy the following conditions:\n" +
+                    "The length must be from 8 to 20 characters\n" +
+                    "Contains at least 01 digit, 01 letter and 01 special character");
+        };
         String encodedPassword = passwordEncoder.encode(password);
         if (customerRepository.existsByEmail(email)){
             throw new DataIntegrityViolationException("Exist customer with email");
@@ -144,5 +152,34 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerEntity loadCustomerByPhoneNumber(String phoneNumber) throws DataNotFoundException {
         return null;
+    }
+
+    @Override
+    public void changePassword(long customerId, ChangePasswordCustomerDTO customerDTO) throws DataNotFoundException, InvalidPasswordException {
+        Optional<CustomerEntity> existingCustomer = Optional.ofNullable(customerRepository.findById(customerId)
+                .orElseThrow(() -> new DataNotFoundException("Customer not found!")));
+        CustomerEntity customerChangePassword = existingCustomer.get();
+        if (!passwordEncoder.matches(customerDTO.getPassword(), customerChangePassword.getPassword())){
+            throw new InvalidPasswordException("WRONG PASSWORD");
+        }
+
+        if (!(customerDTO.getNewPassword().matches(customerDTO.getConfirmPassword()))) {
+            throw new InvalidPasswordException("New password and confirm password do not match!");
+        }
+        if(!isValidPassword(customerDTO.getNewPassword())) {
+            throw new InvalidPasswordException("Password must satisfy the following conditions:\n" +
+                    "The length must be from 8 to 20 characters\n" +
+                    "Contains at least 01 digit, 01 letter and 01 special character");
+        };
+
+        customerChangePassword.setPassword(passwordEncoder.encode(customerDTO.getNewPassword()));
+
+        customerRepository.save(customerChangePassword);
+
+        List<TokenEntity> tokens = tokenRepository.findByCustomer(customerChangePassword);
+        for (TokenEntity token : tokens) {
+            tokenRepository.delete(token);
+        }
+
     }
 }
