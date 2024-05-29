@@ -22,9 +22,6 @@ public class CustomerResponse {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("password")
-    private String password;
-
     @JsonProperty("phone_number")
     private String phoneNumber;
 
@@ -40,13 +37,12 @@ public class CustomerResponse {
     @JsonProperty("pin_number")
     private Long pinNumber;
 
-    public static CustomerResponse fromUserResponse(CustomerEntity customerEntity) {
+    public static CustomerResponse fromCustomerResponse(CustomerEntity customerEntity) {
         return CustomerResponse
                 .builder()
                 .id(customerEntity.getId())
                 .email(customerEntity.getEmail())
                 .name(customerEntity.getName())
-                .password(customerEntity.getPassword())
                 .phoneNumber(customerEntity.getPhoneNumber())
                 .address(customerEntity.getAddress())
                 .citizenId(customerEntity.getCitizenId())

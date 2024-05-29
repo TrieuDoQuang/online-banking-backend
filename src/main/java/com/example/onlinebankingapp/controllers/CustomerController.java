@@ -34,7 +34,7 @@ public class CustomerController {
             CustomerEntity customerEntityResponse = customerService.insertCustomer(customerDTO);
             return ResponseEntity.ok(
                     ResponseObject.builder()
-                            .result(CustomerResponse.fromUserResponse(customerEntityResponse))
+                            .result(CustomerResponse.fromCustomerResponse(customerEntityResponse))
                             .message("Insert successfully")
                             .status(HttpStatus.OK)
                             .build());
@@ -97,14 +97,14 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/getPinNumber/{customerId}")
-    public ResponseEntity<?> getPinNumberByCustomerId(@Valid @PathVariable("customerId") long customerId)
+    @GetMapping("/getById/{customerId}")
+    public ResponseEntity<?> getCustomerById(@Valid @PathVariable("customerId") long customerId)
     {
         try {
             CustomerEntity customerEntityResponse = customerService.getCustomerById(customerId);
             return ResponseEntity.ok(
                     ResponseObject.builder()
-                            .result(customerEntityResponse.getPinNumber())
+                            .result(CustomerResponse.fromCustomerResponse(customerEntityResponse))
                             .message("get Pin Number successfully")
                             .status(HttpStatus.OK)
                             .build());

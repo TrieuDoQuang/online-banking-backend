@@ -2,6 +2,7 @@ package com.example.onlinebankingapp.controllers;
 
 import com.example.onlinebankingapp.dtos.PaymentAccountDTO;
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
+import com.example.onlinebankingapp.responses.Customer.CustomerResponse;
 import com.example.onlinebankingapp.responses.PaymentAccount.PaymentAccountListResponse;
 import com.example.onlinebankingapp.responses.PaymentAccount.PaymentAccountResponse;
 import com.example.onlinebankingapp.responses.ResponseObject;
@@ -114,11 +115,11 @@ public class PaymentAccountController {
     }
 
     @GetMapping("/getByAccountNumber/{accountNumber}")
-    public ResponseEntity<?> getCustomerNameByAccountNumber(@Valid @PathVariable("accountNumber") String accountNumber) {
+    public ResponseEntity<?> getCustomerByAccountNumber(@Valid @PathVariable("accountNumber") String accountNumber) {
         try {
             PaymentAccountEntity existingPaymentAccount = paymentAccountService.getPaymentAccountByAccountNumber(accountNumber);
             return ResponseEntity.ok(ResponseObject.builder()
-                    .result(existingPaymentAccount.getCustomer().getName())
+                    .result(CustomerResponse.fromCustomerResponse(existingPaymentAccount.getCustomer()))
                     .message("Get Payment Account successfully")
                     .status(HttpStatus.OK)
                     .build());

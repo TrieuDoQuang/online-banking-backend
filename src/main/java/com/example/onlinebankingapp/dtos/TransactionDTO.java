@@ -29,4 +29,6 @@ public class TransactionDTO {
     @JsonProperty("receiver_account_number")
     private String receiverAccountNumber;
 
+    @JsonProperty("receiver_account_name")
+    private String receiverAccountName;
 }
