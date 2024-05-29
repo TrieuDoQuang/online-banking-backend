@@ -2,16 +2,14 @@ package com.example.onlinebankingapp.services.SavingAccount;
 
 import com.example.onlinebankingapp.dtos.InterestRateDTO;
 import com.example.onlinebankingapp.dtos.SavingAccountDTO;
-import com.example.onlinebankingapp.entities.InterestRateEntity;
-import com.example.onlinebankingapp.entities.PaymentAccountEntity;
-import com.example.onlinebankingapp.entities.RewardEntity;
-import com.example.onlinebankingapp.entities.SavingAccountEntity;
+import com.example.onlinebankingapp.entities.*;
 import com.example.onlinebankingapp.enums.AccountStatus;
 import com.example.onlinebankingapp.enums.AccountType;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import com.example.onlinebankingapp.repositories.InterestRateRepository;
 import com.example.onlinebankingapp.repositories.PaymentAccountRepository;
 import com.example.onlinebankingapp.repositories.SavingAccountRepository;
+import com.example.onlinebankingapp.services.Customer.CustomerService;
 import com.example.onlinebankingapp.services.InterestRate.InterestRateService;
 import com.example.onlinebankingapp.services.PaymentAccount.PaymentAccountService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -83,7 +82,15 @@ public class SavingAccountServiceImpl implements SavingAccountService {
 
     @Override
     public List<SavingAccountEntity> getSavingAccountsOfUser(Long userId) throws Exception {
-        return null;
+        List<PaymentAccountEntity> userPaymentAccountsList = paymentAccountService.getPaymentAccountsByCustomerId(userId);
+        List<SavingAccountEntity> userSavingAccountsList = new ArrayList<>();
+        for(PaymentAccountEntity paymentAccount: userPaymentAccountsList){
+            List<SavingAccountEntity> savingAccountsOfPaymentAccount
+                    = savingAccountRepository.findSavingAccountEntitiesByPaymentAccount(paymentAccount);
+            userSavingAccountsList.addAll(savingAccountsOfPaymentAccount);
+        }
+
+        return userSavingAccountsList;
     }
 
     @Override

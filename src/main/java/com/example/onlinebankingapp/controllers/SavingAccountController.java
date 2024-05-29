@@ -94,4 +94,28 @@ public class SavingAccountController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/userSavingAccount/{id}")
+    public ResponseEntity<?> getUserSavingAccounts(@Valid @PathVariable("id") Long userId){
+        try{
+            List<SavingAccountEntity> savingAccountEntityList = savingAccountService.getSavingAccountsOfUser(userId);
+
+            List<SavingAccountResponse> savingAccountResponses = savingAccountEntityList.stream()
+                    .map(SavingAccountResponse::fromSavingAccount)
+                    .toList();
+
+            SavingAccountListResponse savingAccountListResponse = SavingAccountListResponse
+                    .builder()
+                    .savingAccounts(savingAccountResponses)
+                    .build();
+
+            return ResponseEntity.ok().body(ResponseObject.builder()
+                    .message("Get Saving account list successfully!")
+                    .status(HttpStatus.OK)
+                    .result(savingAccountListResponse)
+                    .build());
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
