@@ -7,6 +7,10 @@ spring:
     username: admin
     password: VRD8GjmA8ecv4ktpboDCiKePFrJTld9v
     driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
 
   jpa:
     show-sql: true

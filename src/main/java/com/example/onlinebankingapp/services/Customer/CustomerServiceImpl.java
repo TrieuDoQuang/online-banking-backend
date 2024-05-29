@@ -69,6 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
         String email = customerDTO.getEmail();
         String citizenId = customerDTO.getCitizenId();
         String password = customerDTO.getPassword();
+        String phoneNumber = customerDTO.getPhoneNumber();
         if(!isValidPassword(password)) {
             throw new InvalidPasswordException("Password must satisfy the following conditions:\n" +
                     "The length must be from 8 to 20 characters\n" +
@@ -80,6 +81,9 @@ public class CustomerServiceImpl implements CustomerService {
         }
         if (customerRepository.existsByCitizenId(citizenId)) {
             throw new DataIntegrityViolationException("Exist customer with citizen id");
+        }
+        if(customerRepository.existsByPhoneNumber(phoneNumber)){
+            throw new DataIntegrityViolationException("Exist customer with phone number");
         }
 
         if (customerRepository.existsByEmailAndCitizenId(email, citizenId)) {
