@@ -110,7 +110,23 @@ public class RewardController {
             RewardEntity rewardEntity = rewardService.uploadRewardImg(id, file);
 
             return ResponseEntity.ok().body(ResponseObject.builder()
-                    .message("Get reward successfully")
+                    .message("Upload reward's image successfully")
+                    .status(HttpStatus.OK)
+                    .result(RewardResponse.fromReward(rewardEntity))
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateReward(@Valid @PathVariable("id") Long id, @Valid @RequestBody RewardDTO rewardDTO) {
+        try {
+
+            RewardEntity rewardEntity = rewardService.updateReward(id, rewardDTO);
+
+            return ResponseEntity.ok().body(ResponseObject.builder()
+                    .message("Update reward successfully")
                     .status(HttpStatus.OK)
                     .result(RewardResponse.fromReward(rewardEntity))
                     .build());
