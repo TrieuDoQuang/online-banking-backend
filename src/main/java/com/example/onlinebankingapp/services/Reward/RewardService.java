@@ -4,6 +4,7 @@ import com.example.onlinebankingapp.dtos.RewardDTO;
 import com.example.onlinebankingapp.entities.RewardEntity;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import com.example.onlinebankingapp.exceptions.InvalidParamException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,5 +16,7 @@ public interface RewardService {
     List<RewardEntity> getAllRewards() throws Exception;
 
     RewardEntity updateReward(Long id, RewardDTO rewardDTO) throws Exception;
+
+    RewardEntity uploadRewardImg(Long id, MultipartFile file) throws Exception;
 
 }

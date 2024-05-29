@@ -21,4 +21,7 @@ public class RewardDTO {
 
     @JsonProperty("reward_type")
     private String rewardType;
+
+//    @JsonProperty("image")
+//    private byte[] image;
 }

@@ -28,6 +28,9 @@ public class RewardEntity {
     @Column(name = "reward_type", length = 20, nullable = false)
     private RewardType rewardType;
 
+    @Column(name = "image")
+    private byte[] image;
+
 //    @ManyToOne(cascade = CascadeType.DETACH)
 //    @JoinColumn(name = "payment_account_id")
 //    private PaymentAccountEntity paymentAccount;

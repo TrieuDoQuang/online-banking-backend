@@ -6,11 +6,14 @@ import com.example.onlinebankingapp.enums.RewardType;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import com.example.onlinebankingapp.exceptions.InvalidParamException;
 import com.example.onlinebankingapp.repositories.RewardRepository;
+import com.example.onlinebankingapp.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +72,21 @@ public class RewardServiceImpl implements RewardService {
         editedRewardEntity.setCostPoint(rewardDTO.getCostPoint());
         editedRewardEntity.setRewardType(RewardType.valueOf(rewardDTO.getRewardType()));
 
+        return rewardRepository.save(editedRewardEntity);
+    }
+
+    @Override
+    public RewardEntity uploadRewardImg(Long id, MultipartFile file) throws Exception {
+        RewardEntity editedRewardEntity = rewardRepository.findRewardEntityById(id);
+        if(editedRewardEntity == null){
+            throw new DataNotFoundException("Cannot find reward with Id: "+ id);
+        }
+
+        if(!ImageUtils.isImgValid(file)){
+            throw new InvalidParamException("Image must be less than 2mbs and in the following formats: jpeg, jpg, png, webp");
+        }
+
+        editedRewardEntity.setImage(file.getBytes());
         return rewardRepository.save(editedRewardEntity);
     }
 
