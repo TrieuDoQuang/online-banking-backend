@@ -4,6 +4,7 @@ import com.example.onlinebankingapp.dtos.InterestRateDTO;
 import com.example.onlinebankingapp.dtos.SavingAccountDTO;
 import com.example.onlinebankingapp.entities.InterestRateEntity;
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
+import com.example.onlinebankingapp.entities.RewardEntity;
 import com.example.onlinebankingapp.entities.SavingAccountEntity;
 import com.example.onlinebankingapp.enums.AccountStatus;
 import com.example.onlinebankingapp.enums.AccountType;
@@ -16,6 +17,7 @@ import com.example.onlinebankingapp.services.PaymentAccount.PaymentAccountServic
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Random;
@@ -26,6 +28,7 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     private final SavingAccountRepository savingAccountRepository;
     private final PaymentAccountRepository paymentAccountRepository;
     private final InterestRateRepository interestRateRepository;
+    private final PaymentAccountService paymentAccountService;
 
     @Override
     public SavingAccountEntity insertSavingAccount(SavingAccountDTO savingAccountDTO) throws Exception {
@@ -67,7 +70,15 @@ public class SavingAccountServiceImpl implements SavingAccountService {
 
     @Override
     public SavingAccountEntity getSavingAccountById(Long id) throws Exception {
-        return null;
+        if(id == null){
+            throw new Exception("Missing parameter");
+        }
+
+        SavingAccountEntity querySavingAccount = savingAccountRepository.findSavingAccountEntityById(id);
+        if(querySavingAccount != null) {
+            return querySavingAccount;
+        }
+        throw new DataNotFoundException("Cannot find saving account with Id: "+ id);
     }
 
     @Override
@@ -88,6 +99,26 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     @Override
     public SavingAccountEntity updateSavingAccounts(Long id, SavingAccountDTO savingAccountDTO) throws Exception {
         return null;
+    }
+
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    @Override
+    public SavingAccountEntity withdrawSavingAccount(Long id) throws Exception {
+        SavingAccountEntity savingAccount = getSavingAccountById(id);
+        if(!savingAccount.getAccountStatus().equals(AccountStatus.ACTIVE)){
+            throw new Exception("This saving account is inactive, cannot withdraw from an inactive account");
+        }
+
+        PaymentAccountEntity paymentAccount = savingAccount.getPaymentAccount();
+
+        savingAccount.setAccountStatus(AccountStatus.INACTIVE);
+        savingAccount.setDateClosed(new java.sql.Date(System.currentTimeMillis()));
+        Double transferAmount = savingAccount.getSavingCurrentAmount();
+        savingAccount.setSavingCurrentAmount((double) 0);
+        paymentAccount.setCurrentBalance(paymentAccount.getCurrentBalance() + transferAmount);
+        paymentAccountRepository.save(paymentAccount);
+
+        return savingAccountRepository.save(savingAccount);
     }
 
     private String isSavingAccountDTOValid(SavingAccountDTO savingAccountDTO){

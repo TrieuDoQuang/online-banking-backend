@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SavingAccountRepository extends JpaRepository<SavingAccountEntity, Long> {
     boolean existsByAccountNumberEquals(String accountNumber);
+
+    SavingAccountEntity findSavingAccountEntityById(Long id);
 }

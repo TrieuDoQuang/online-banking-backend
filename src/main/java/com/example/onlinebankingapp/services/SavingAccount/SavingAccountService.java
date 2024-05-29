@@ -19,4 +19,5 @@ public interface SavingAccountService {
 
     SavingAccountEntity updateSavingAccounts(Long id, SavingAccountDTO savingAccountDTO) throws Exception;
 
+    SavingAccountEntity withdrawSavingAccount(Long id) throws Exception;
 }
