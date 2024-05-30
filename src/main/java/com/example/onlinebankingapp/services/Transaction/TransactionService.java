@@ -5,9 +5,11 @@ import com.example.onlinebankingapp.entities.TransactionEntity;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import org.apache.coyote.BadRequestException;
 
+import java.util.List;
+
 public interface TransactionService {
 
     TransactionEntity makeTransaction(TransactionDTO transactionDTO) throws DataNotFoundException, BadRequestException;
 
-
+    List<TransactionEntity> getTransactionsByCustomerId(long customerId) throws DataNotFoundException;
 }

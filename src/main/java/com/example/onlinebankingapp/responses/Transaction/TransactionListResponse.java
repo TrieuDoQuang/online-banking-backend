@@ -1,4 +1,4 @@
-package com.example.onlinebankingapp.responses.SavingAccount;
+package com.example.onlinebankingapp.responses.Transaction;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,9 @@ import java.util.List;
 @Data
 @Builder
 @NoArgsConstructor
-public class SavingAccountListResponse {
-    private List<SavingAccountResponse> savingAccounts;
+public class TransactionListResponse {
+
+    private List<TransactionResponse> transactions;
+
     private int totalPages;
 }

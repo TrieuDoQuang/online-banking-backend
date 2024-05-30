@@ -16,7 +16,12 @@ public class OTPService {
         return otp;
     }
 
-    public boolean verifyOtp(String email, String otp) {
+    public boolean verifyOtp(String email, String otp) throws Exception {
+
+        if (!otp.equals(otpStorage.get(email))) {
+            throw new Exception("Invalid OTP");
+        }
+
         return otp.equals(otpStorage.get(email));
     }
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -57,5 +58,17 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         return transactionRepository.save(newTransaction);
+    }
+
+    @Override
+    public List<TransactionEntity> getTransactionsByCustomerId(long customerId) throws DataNotFoundException {
+
+        List<TransactionEntity> transactions = transactionRepository.findTransactionsByCustomerId(customerId);
+
+        if(transactions.isEmpty()) {
+            throw new DataNotFoundException("Cannot find Transactions History");
+        }
+
+        return transactions;
     }
 }

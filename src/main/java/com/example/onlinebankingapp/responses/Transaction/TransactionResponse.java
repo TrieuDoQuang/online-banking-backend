@@ -1,61 +1,44 @@
-package com.example.onlinebankingapp.responses.SavingAccount;
+package com.example.onlinebankingapp.responses.Transaction;
 
-import com.example.onlinebankingapp.entities.InterestRateEntity;
-import com.example.onlinebankingapp.entities.PaymentAccountEntity;
 import com.example.onlinebankingapp.entities.SavingAccountEntity;
+import com.example.onlinebankingapp.entities.TransactionEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SavingAccountResponse {
+public class TransactionResponse {
     private Long id;
 
-    @JsonProperty("account_number")
-    private String accountNumber;
+    private Double amount;
 
-    @JsonProperty("account_status")
-    private String accountStatus;
+    @JsonProperty("transaction_date_time")
+    private Timestamp transactionDateTime;
 
-    @JsonProperty("account_type")
-    private String accountType;
+    @JsonProperty("transaction_remark")
+    private String transactionRemark;
 
-    @JsonProperty("date_closed")
-    private Date dateClosed;
+    @JsonProperty("sender_account_number")
+    private String senderAccountNumber;
 
-    @JsonProperty("date_opened")
-    private Date dateOpened;
+    @JsonProperty("receiver_account_number")
+    private String receiverAccountNumber;
 
-    @JsonProperty("saving_current_amount")
-    private Double savingCurrentAmount;
 
-    @JsonProperty("saving_initial_amount")
-    private Double savingInitialAmount;
-
-    @JsonProperty("payment_account_id")
-    private Long paymentAccountId;
-
-    @JsonProperty("interest_rate_id")
-    private Long interestRateId;
-
-    public static SavingAccountResponse fromSavingAccount(SavingAccountEntity savingAccount){
-        return SavingAccountResponse.builder()
-                .id(savingAccount.getId())
-                .accountNumber(savingAccount.getAccountNumber())
-                .accountStatus(savingAccount.getAccountStatus().name())
-                .accountType(savingAccount.getAccountType().name())
-                .dateClosed(savingAccount.getDateClosed())
-                .dateOpened(savingAccount.getDateOpened())
-                .savingCurrentAmount(savingAccount.getSavingCurrentAmount())
-                .savingInitialAmount(savingAccount.getSavingInitialAmount())
-                .paymentAccountId(savingAccount.getPaymentAccount().getId())
-                .interestRateId(savingAccount.getInterestRate().getId())
+    public static TransactionResponse fromTransaction(TransactionEntity transaction){
+        return TransactionResponse.builder()
+                .id(transaction.getId())
+                .amount(transaction.getAmount())
+                .senderAccountNumber(transaction.getSender().getAccountNumber())
+                .receiverAccountNumber(transaction.getReceiver().getAccountNumber())
+                .transactionDateTime(transaction.getTransactionDateTime())
+                .transactionRemark(transaction.getTransactionRemark())
                 .build();
     }
 }
