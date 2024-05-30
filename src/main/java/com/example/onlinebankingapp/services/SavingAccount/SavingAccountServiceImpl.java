@@ -13,10 +13,16 @@ import com.example.onlinebankingapp.services.Customer.CustomerService;
 import com.example.onlinebankingapp.services.InterestRate.InterestRateService;
 import com.example.onlinebankingapp.services.PaymentAccount.PaymentAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +38,7 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     @Override
     public SavingAccountEntity insertSavingAccount(SavingAccountDTO savingAccountDTO) throws Exception {
         String dataValidationResult = isSavingAccountDTOValid(savingAccountDTO);
-        if(!dataValidationResult.equals("OK")){
+        if (!dataValidationResult.equals("OK")) {
             throw new DataIntegrityViolationException(dataValidationResult);
         }
 
@@ -40,7 +46,7 @@ public class SavingAccountServiceImpl implements SavingAccountService {
         InterestRateEntity interestRateReference = interestRateRepository.getReferenceById(savingAccountDTO.getInterestRateId());
 
         //Kiểm tra tiền chuyển có đạt mức tối thiểu của interest rate
-        if(savingAccountDTO.getSavingInitialAmount() < interestRateReference.getMinBalance()){
+        if (savingAccountDTO.getSavingInitialAmount() < interestRateReference.getMinBalance()) {
             throw new DataIntegrityViolationException("The deposit amount is insufficient for this interest rate package");
         }
 
@@ -58,7 +64,7 @@ public class SavingAccountServiceImpl implements SavingAccountService {
 
         //Giảm số tiền trong payment account tương ứng với tiền gửi của saving account
         Double newPaymentAccountBalance = paymentAccountReference.getCurrentBalance() - newSavingAccountEntity.getSavingInitialAmount();
-        if(newPaymentAccountBalance < 0) {
+        if (newPaymentAccountBalance < 0) {
             throw new DataIntegrityViolationException("Payment account does not have enough balance for the required amount in saving acocunt");
         }
         paymentAccountReference.setCurrentBalance(newPaymentAccountBalance);
@@ -69,22 +75,22 @@ public class SavingAccountServiceImpl implements SavingAccountService {
 
     @Override
     public SavingAccountEntity getSavingAccountById(Long id) throws Exception {
-        if(id == null){
+        if (id == null) {
             throw new Exception("Missing parameter");
         }
 
         SavingAccountEntity querySavingAccount = savingAccountRepository.findSavingAccountEntityById(id);
-        if(querySavingAccount != null) {
+        if (querySavingAccount != null) {
             return querySavingAccount;
         }
-        throw new DataNotFoundException("Cannot find saving account with Id: "+ id);
+        throw new DataNotFoundException("Cannot find saving account with Id: " + id);
     }
 
     @Override
     public List<SavingAccountEntity> getSavingAccountsOfUser(Long userId) throws Exception {
         List<PaymentAccountEntity> userPaymentAccountsList = paymentAccountService.getPaymentAccountsByCustomerId(userId);
         List<SavingAccountEntity> userSavingAccountsList = new ArrayList<>();
-        for(PaymentAccountEntity paymentAccount: userPaymentAccountsList){
+        for (PaymentAccountEntity paymentAccount : userPaymentAccountsList) {
             List<SavingAccountEntity> savingAccountsOfPaymentAccount
                     = savingAccountRepository.findSavingAccountEntitiesByPaymentAccount(paymentAccount);
             userSavingAccountsList.addAll(savingAccountsOfPaymentAccount);
@@ -112,7 +118,7 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     @Override
     public SavingAccountEntity withdrawSavingAccount(Long id) throws Exception {
         SavingAccountEntity savingAccount = getSavingAccountById(id);
-        if(!savingAccount.getAccountStatus().equals(AccountStatus.ACTIVE)){
+        if (!savingAccount.getAccountStatus().equals(AccountStatus.ACTIVE)) {
             throw new Exception("This saving account is inactive, cannot withdraw from an inactive account");
         }
 
@@ -120,7 +126,7 @@ public class SavingAccountServiceImpl implements SavingAccountService {
 
         savingAccount.setAccountStatus(AccountStatus.INACTIVE);
         savingAccount.setDateClosed(new java.sql.Date(System.currentTimeMillis()));
-        Double transferAmount = savingAccount.getSavingCurrentAmount();
+        Double transferAmount = savingAccount.getSavingInitialAmount();
         savingAccount.setSavingCurrentAmount((double) 0);
         paymentAccount.setCurrentBalance(paymentAccount.getCurrentBalance() + transferAmount);
         paymentAccountRepository.save(paymentAccount);
@@ -128,11 +134,61 @@ public class SavingAccountServiceImpl implements SavingAccountService {
         return savingAccountRepository.save(savingAccount);
     }
 
-    private String isSavingAccountDTOValid(SavingAccountDTO savingAccountDTO){
+//    @Override
+//    public void performSavingAccountsDailyUpdate() {
+//        List<SavingAccountEntity> savingAccountEntityList = savingAccountRepository.findAll();
+//
+//        for (SavingAccountEntity savingAccount : savingAccountEntityList) {
+//            if (savingAccount.getAccountStatus().equals(AccountStatus.ACTIVE)) {
+//                if(isEndOfTerm(savingAccount)){
+//                    deactiveAndTransferCurrentBalanceToPaymentAccount(savingAccount);
+//                } else {
+//                    updateDailyCurrentBalance(savingAccount);
+//                }
+//            }
+//        }
+//    }
+
+    public boolean isEndOfTerm(SavingAccountEntity savingAccount) {
+        Integer termNo = savingAccount.getInterestRate().getTerm();
+        int totalTermDays = termNo * 30;
+
+        LocalDate todayLocalDate = LocalDate.now();
+        LocalDate startTermLocalDate = savingAccount.getDateOpened().toLocalDate();
+        LocalDate endTermLocalDate = startTermLocalDate.plusDays(totalTermDays);
+        return (todayLocalDate.isEqual(endTermLocalDate) || todayLocalDate.isAfter(endTermLocalDate));
+    }
+
+    @Override
+    public SavingAccountEntity deactiveAndTransferCurrentBalanceToPaymentAccount(SavingAccountEntity savingAccount) {
+        PaymentAccountEntity associatedPaymentAccount = savingAccount.getPaymentAccount();
+        Double transferAmount = savingAccount.getSavingCurrentAmount();
+        int transferRewardPoints = (int) (savingAccount.getSavingInitialAmount() / 10000);
+        savingAccount.setSavingCurrentAmount((double) 0);
+        associatedPaymentAccount.setCurrentBalance(associatedPaymentAccount.getCurrentBalance() + transferAmount);
+        associatedPaymentAccount.setRewardPoint(associatedPaymentAccount.getRewardPoint() + transferRewardPoints);
+        paymentAccountRepository.save(associatedPaymentAccount);
+        savingAccount.setAccountStatus(AccountStatus.INACTIVE);
+        savingAccount.setDateClosed(new java.sql.Date(System.currentTimeMillis()));
+        return savingAccountRepository.save(savingAccount);
+    }
+
+    @Override
+    public SavingAccountEntity updateDailyCurrentBalance(SavingAccountEntity savingAccount) {
+        InterestRateEntity accountInterestRate = savingAccount.getInterestRate();
+        //formula: daily earned amount =
+        // initial amount * interest rate / 12 (12 months) / 30 (30 days)
+        Double dailyEarnedInterest = savingAccount.getSavingInitialAmount() * (accountInterestRate.getInterestRate() / 100) / 12 / 30;
+        savingAccount.setSavingCurrentAmount(savingAccount.getSavingCurrentAmount() + dailyEarnedInterest);
+        return savingAccountRepository.save(savingAccount);
+    }
+
+
+    private String isSavingAccountDTOValid(SavingAccountDTO savingAccountDTO) {
         Double savingInitialAmount = savingAccountDTO.getSavingInitialAmount();
         String accountType = savingAccountDTO.getAccountType();
 
-        if(savingInitialAmount <= 0){
+        if (savingInitialAmount <= 0) {
             return "Số tiền gửi phải lớn hơn 0";
         }
 
@@ -145,12 +201,12 @@ public class SavingAccountServiceImpl implements SavingAccountService {
         return "OK";
     }
 
-    private String generateRandomSavingAccountNumber(){
+    private String generateRandomSavingAccountNumber() {
         Random random = new Random();
         StringBuilder cardNumber;
         do {
             cardNumber = new StringBuilder("SA");
-            for(int i = 0; i < 8; i++){
+            for (int i = 0; i < 8; i++) {
                 int randomNum = random.nextInt(10);
                 cardNumber.append(Integer.toString(randomNum));
             }
