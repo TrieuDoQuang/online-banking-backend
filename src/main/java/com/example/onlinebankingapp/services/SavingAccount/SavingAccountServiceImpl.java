@@ -163,7 +163,7 @@ public class SavingAccountServiceImpl implements SavingAccountService {
     public SavingAccountEntity deactiveAndTransferCurrentBalanceToPaymentAccount(SavingAccountEntity savingAccount) {
         PaymentAccountEntity associatedPaymentAccount = savingAccount.getPaymentAccount();
         Double transferAmount = savingAccount.getSavingCurrentAmount();
-        int transferRewardPoints = (int) (savingAccount.getSavingInitialAmount() / 100000);
+        int transferRewardPoints = (int) (savingAccount.getSavingInitialAmount() / 10000);
         savingAccount.setSavingCurrentAmount((double) 0);
         associatedPaymentAccount.setCurrentBalance(associatedPaymentAccount.getCurrentBalance() + transferAmount);
         associatedPaymentAccount.setRewardPoint(associatedPaymentAccount.getRewardPoint() + transferRewardPoints);
