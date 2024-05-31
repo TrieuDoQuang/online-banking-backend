@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.controllers;
 
+import com.example.onlinebankingapp.dtos.AmountOperationDTO;
 import com.example.onlinebankingapp.dtos.PaymentAccountDTO;
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
 import com.example.onlinebankingapp.responses.Customer.CustomerResponse;
@@ -152,6 +153,52 @@ public class PaymentAccountController {
         catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
 
+        }
+    }
+
+    @PutMapping("/topUpPaymentAccount/{id}")
+    public ResponseEntity<?> topUpPaymentAccount(
+            @Valid @PathVariable("id") Long paymentAccountId , @Valid @RequestBody AmountOperationDTO amountDTO) {
+        try {
+            if (amountDTO.getAmount() > 5000000) {
+                return ResponseEntity.status(888).body(ResponseObject.builder()
+                        .message("Amount exceeds the maximum allowable limit.")
+                        .status(HttpStatus.BAD_REQUEST)
+                        .result(amountDTO)
+                        .build());
+            }
+            paymentAccountService.topUpPaymentAccount(paymentAccountId, amountDTO);
+            return ResponseEntity.ok().body(ResponseObject.builder()
+                    .message("Top up Payment Account Successfully")
+                    .status(HttpStatus.OK)
+                    .result(amountDTO)
+                    .build());
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/withdrawPaymentAccount/{id}")
+    public ResponseEntity<?> withdrawPaymentAccount(
+            @Valid @PathVariable("id") Long paymentAccountId, @Valid @RequestBody AmountOperationDTO amountDTO ) {
+        try {
+            if (amountDTO.getAmount() > 5000000) {
+                return ResponseEntity.status(888).body(ResponseObject.builder()
+                        .message("Amount exceeds the maximum allowable limit.")
+                        .status(HttpStatus.BAD_REQUEST)
+                        .result(amountDTO)
+                        .build());
+            }
+            paymentAccountService.withdrawPaymentAccount(paymentAccountId, amountDTO);
+            return ResponseEntity.ok().body(ResponseObject.builder()
+                    .message("Withdraw Payment Account Successfully")
+                    .status(HttpStatus.OK)
+                    .result(amountDTO)
+                    .build());
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

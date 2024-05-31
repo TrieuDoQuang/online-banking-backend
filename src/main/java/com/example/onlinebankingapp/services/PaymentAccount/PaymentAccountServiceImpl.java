@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.services.PaymentAccount;
 
+import com.example.onlinebankingapp.dtos.AmountOperationDTO;
 import com.example.onlinebankingapp.dtos.PaymentAccountDTO;
 import com.example.onlinebankingapp.entities.CustomerEntity;
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
@@ -105,5 +106,37 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
             throw new DataNotFoundException("Cannot find Payment Accounts of Customer");
         }
         return paymentAccounts;
+    }
+
+    @Override
+    public void topUpPaymentAccount(long paymentAccountId, AmountOperationDTO amountDTO) throws DataNotFoundException {
+        Optional<PaymentAccountEntity> existingPaymentAccountOptional = paymentAccountRepository.findById(paymentAccountId);
+        if (existingPaymentAccountOptional.isEmpty()) {
+            throw new DataNotFoundException("Payment Account not found");
+        }
+
+        PaymentAccountEntity existingPaymentAccount = existingPaymentAccountOptional.get();
+        double amount = amountDTO.getAmount();
+        double currentBalance = existingPaymentAccount.getCurrentBalance();
+        existingPaymentAccount.setCurrentBalance(currentBalance + amount);
+        paymentAccountRepository.save(existingPaymentAccount);
+    }
+
+
+    @Override
+    public void withdrawPaymentAccount(long paymentAccountId, AmountOperationDTO amountDTO) throws DataNotFoundException {
+        Optional<PaymentAccountEntity> existingPaymentAccountWithdraw = paymentAccountRepository.findById(paymentAccountId);
+        if (existingPaymentAccountWithdraw.isEmpty()) {
+            throw new DataNotFoundException("Payment Account not found");
+        }
+        double amount = amountDTO.getAmount();
+        PaymentAccountEntity existingPaymentAccount = existingPaymentAccountWithdraw.get();
+        double currentBalance = existingPaymentAccount.getCurrentBalance();
+        if (currentBalance < amount) {
+            throw new DataNotFoundException("Insufficient balance for withdrawing");
+        }
+
+        existingPaymentAccount.setCurrentBalance(currentBalance - amount);
+        paymentAccountRepository.save(existingPaymentAccount);
     }
 }
