@@ -35,7 +35,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         PaymentAccountEntity paymentAccount = paymentAccountRepository.getPaymentAccountByAccountNumber(beneficiaryDTO.getAccountNumber());
 
         if(paymentAccount == null ) {
-            throw new Exception("Payment Account does not exist");
+            throw new Exception("Payment Account " + beneficiaryDTO.getAccountNumber() + " does not exist");
         }
         // Create new BeneficiaryEntity
         BeneficiaryEntity newBeneficiary = BeneficiaryEntity.builder()
