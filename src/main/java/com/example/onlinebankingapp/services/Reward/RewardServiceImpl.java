@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.services.Reward;
 
+import com.example.onlinebankingapp.dtos.AccountRewardDTO;
 import com.example.onlinebankingapp.dtos.RewardDTO;
 import com.example.onlinebankingapp.entities.AccountRewardEntity;
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
@@ -9,6 +10,7 @@ import com.example.onlinebankingapp.enums.RewardType;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import com.example.onlinebankingapp.exceptions.InvalidParamException;
 import com.example.onlinebankingapp.repositories.AccountRewardRepository;
+import com.example.onlinebankingapp.repositories.PaymentAccountRepository;
 import com.example.onlinebankingapp.repositories.RewardRepository;
 import com.example.onlinebankingapp.services.PaymentAccount.PaymentAccountService;
 import com.example.onlinebankingapp.utils.ImageUtils;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
@@ -29,6 +32,7 @@ public class RewardServiceImpl implements RewardService {
     private final RewardRepository rewardRepository;
     private final PaymentAccountService paymentAccountService;
     private final AccountRewardRepository accountRewardRepository;
+    private final PaymentAccountRepository paymentAccountRepository;
     @Override
     public RewardEntity insertReward(RewardDTO rewardDTO) throws InvalidParamException {
         String dataValidationResult = isRewardDTOValid(rewardDTO);
@@ -112,6 +116,37 @@ public class RewardServiceImpl implements RewardService {
         }
 
         return userAccountRewardsList;
+    }
+
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    @Override
+    public AccountRewardEntity redeemReward(AccountRewardDTO accountRewardDTO) throws Exception {
+        PaymentAccountEntity queryPaymentAccount = paymentAccountService.getPaymentAccountById(accountRewardDTO.getPaymentAccountId());
+        RewardEntity queryReward = getRewardById(accountRewardDTO.getRewardId());
+
+        //check if point is enough
+        if(queryPaymentAccount.getRewardPoint() < queryReward.getCostPoint()){
+            throw new Exception("Insufficient point, the required point to redeem is " + queryReward.getCostPoint().toString());
+        }
+
+        AccountRewardEntity.AccountRewardRelationshipKey relationshipKey = AccountRewardEntity.AccountRewardRelationshipKey.builder()
+                .reward(queryReward)
+                .paymentAccount(queryPaymentAccount)
+                .build();
+
+        //check if this voucher has been redeemed by this account
+        if(accountRewardRepository.existsAccountRewardEntityByAccountRewardKey(relationshipKey)){
+            throw new Exception("This account has already redeemed this reward");
+        }
+
+        AccountRewardEntity newAccountReward = AccountRewardEntity.builder()
+                .accountRewardKey(relationshipKey)
+                .build();
+
+        //subtract point from payment account
+        queryPaymentAccount.setRewardPoint(queryPaymentAccount.getRewardPoint()- queryReward.getCostPoint());
+        paymentAccountRepository.save(queryPaymentAccount);
+        return accountRewardRepository.save(newAccountReward);
     }
 
     private String isRewardDTOValid(RewardDTO rewardDTO) {

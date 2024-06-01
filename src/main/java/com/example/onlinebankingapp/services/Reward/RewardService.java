@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.services.Reward;
 
+import com.example.onlinebankingapp.dtos.AccountRewardDTO;
 import com.example.onlinebankingapp.dtos.RewardDTO;
 import com.example.onlinebankingapp.entities.AccountRewardEntity;
 import com.example.onlinebankingapp.entities.RewardEntity;
@@ -21,4 +22,6 @@ public interface RewardService {
     RewardEntity uploadRewardImg(Long id, MultipartFile file) throws Exception;
 
     List<AccountRewardEntity> getUserAccountRewards(Long userId) throws DataNotFoundException;
+
+    AccountRewardEntity redeemReward(AccountRewardDTO accountRewardDTO) throws Exception;
 }

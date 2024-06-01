@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.controllers;
 
+import com.example.onlinebankingapp.dtos.AccountRewardDTO;
 import com.example.onlinebankingapp.dtos.RewardDTO;
 import com.example.onlinebankingapp.entities.AccountRewardEntity;
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
@@ -154,6 +155,20 @@ public class RewardController {
                     .status(HttpStatus.OK)
                     .message("Get user reward list successfully!")
                     .result(accountRewardListResponse)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/userReward/redeem")
+    public ResponseEntity<?> redeemReward(@Valid @RequestBody AccountRewardDTO accountRewardDTO) {
+        try {
+            AccountRewardEntity newAccountRewardEntity = rewardService.redeemReward(accountRewardDTO);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .status(HttpStatus.OK)
+                    .message("Redeem reward successfully!")
+                    .result(AccountRewardResponse.fromAccountReward(newAccountRewardEntity))
                     .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

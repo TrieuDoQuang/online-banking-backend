@@ -8,5 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AccountRewardRepository extends JpaRepository<AccountRewardEntity, AccountRewardEntity.AccountRewardRelationshipKey> {
-    List<AccountRewardEntity> findAccountRewardEntitiesByAccountRewardKeyPaymentAccount(PaymentAccountEntity paymentAccount)
+    List<AccountRewardEntity> findAccountRewardEntitiesByAccountRewardKeyPaymentAccount(PaymentAccountEntity paymentAccount);
+
+    boolean existsAccountRewardEntityByAccountRewardKey(AccountRewardEntity.AccountRewardRelationshipKey accountRewardKey);
 ;}
