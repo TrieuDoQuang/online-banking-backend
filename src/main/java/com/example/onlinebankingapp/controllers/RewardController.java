@@ -1,9 +1,12 @@
 package com.example.onlinebankingapp.controllers;
 
 import com.example.onlinebankingapp.dtos.RewardDTO;
+import com.example.onlinebankingapp.entities.AccountRewardEntity;
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
 import com.example.onlinebankingapp.entities.RewardEntity;
 import com.example.onlinebankingapp.entities.SavingAccountEntity;
+import com.example.onlinebankingapp.responses.AccountReward.AccountRewardListResponse;
+import com.example.onlinebankingapp.responses.AccountReward.AccountRewardResponse;
 import com.example.onlinebankingapp.responses.PaymentAccount.PaymentAccountResponse;
 import com.example.onlinebankingapp.responses.ResponseObject;
 import com.example.onlinebankingapp.responses.Reward.RewardListResponse;
@@ -138,19 +141,19 @@ public class RewardController {
     @GetMapping("/userReward/{id}")
     public ResponseEntity<?> getUserRewards(@Valid @PathVariable("id") Long userId) {
         try {
-            List<RewardEntity> rewardEntityList = rewardService.getUserRewards(userId);
-            List<RewardResponse> rewardResponseList = rewardEntityList.stream()
-                    .map(RewardResponse::fromReward)
+            List<AccountRewardEntity> accountRewardList = rewardService.getUserAccountRewards(userId);
+            List<AccountRewardResponse> accountRewardResponseList = accountRewardList.stream()
+                    .map(AccountRewardResponse::fromAccountReward)
                     .toList();
 
-            RewardListResponse rewardListResponse = RewardListResponse.builder()
-                    .rewards(rewardResponseList)
+            AccountRewardListResponse accountRewardListResponse = AccountRewardListResponse.builder()
+                    .accountRewards(accountRewardResponseList)
                     .build();
 
             return ResponseEntity.ok(ResponseObject.builder()
                     .status(HttpStatus.OK)
                     .message("Get user reward list successfully!")
-                    .result(rewardListResponse)
+                    .result(accountRewardListResponse)
                     .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -99,18 +99,19 @@ public class RewardServiceImpl implements RewardService {
     }
 
     @Override
-    public List<RewardEntity> getUserRewards(Long userId) throws DataNotFoundException {
+    public List<AccountRewardEntity> getUserAccountRewards(Long userId) throws DataNotFoundException {
         List<PaymentAccountEntity> userPaymentAccountsList = paymentAccountService.getPaymentAccountsByCustomerId(userId);
-        List<RewardEntity> userRewardsList = new ArrayList<>();
+        List<AccountRewardEntity> userAccountRewardsList = new ArrayList<>();
         for (PaymentAccountEntity paymentAccount : userPaymentAccountsList) {
-            List<AccountRewardEntity> accountRewardList
-                    = accountRewardRepository.findAccountRewardEntitiesByAccountRewardKeyPaymentAccount(paymentAccount);
-            List<AccountRewardEntity.AccountRewardRelationshipKey> rewardRelationshipKeys = accountRewardList.stream().map(AccountRewardEntity::getAccountRewardKey).toList();
-            List<RewardEntity> rewardsOfPaymentAccount = rewardRelationshipKeys.stream().map(AccountRewardEntity.AccountRewardRelationshipKey::getReward).toList();
-            userRewardsList.addAll(rewardsOfPaymentAccount);
+//            List<AccountRewardEntity> accountRewardList
+//                    = accountRewardRepository.findAccountRewardEntitiesByAccountRewardKeyPaymentAccount(paymentAccount);
+//            List<AccountRewardEntity.AccountRewardRelationshipKey> rewardRelationshipKeys = accountRewardList.stream().map(AccountRewardEntity::getAccountRewardKey).toList();
+//            List<RewardEntity> rewardsOfPaymentAccount = rewardRelationshipKeys.stream().map(AccountRewardEntity.AccountRewardRelationshipKey::getReward).toList();
+//            userRewardsList.addAll(rewardsOfPaymentAccount);
+            userAccountRewardsList.addAll(accountRewardRepository.findAccountRewardEntitiesByAccountRewardKeyPaymentAccount(paymentAccount));
         }
 
-        return userRewardsList;
+        return userAccountRewardsList;
     }
 
     private String isRewardDTOValid(RewardDTO rewardDTO) {
