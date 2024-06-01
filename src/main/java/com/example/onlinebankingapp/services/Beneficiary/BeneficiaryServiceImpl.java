@@ -13,14 +13,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+// Service class responsible for implementing BeneficiaryService interface
 @Service
 @RequiredArgsConstructor
 public class BeneficiaryServiceImpl implements BeneficiaryService {
 
+    // Dependency injection of repositories
     private final BeneficiaryRepository beneficiaryRepository;
     private final CustomerRepository customerRepository;
     private final PaymentAccountRepository paymentAccountRepository;
 
+    // Insert a new beneficiary into the system
+    // in charge: dat
     @Override
     public BeneficiaryEntity insertBeneficiary(BeneficiaryDTO beneficiaryDTO) throws Exception {
 
@@ -48,12 +52,16 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         return beneficiaryRepository.save(newBeneficiary);
     }
 
+    // Retrieve a beneficiary by their ID
+    // in charge: dat
     @Override
     public BeneficiaryEntity getBeneficiaryById(long id) throws Exception {
         return beneficiaryRepository.findById(id)
                 .orElseThrow(() -> new Exception("Cannot find Beneficiary with Id " + id));
     }
 
+    // Retrieve all beneficiaries associated with a particular customer ID
+    // in charge: dat
     @Override
     public List<BeneficiaryEntity> getBeneficiariesByCustomerId(long customerId) throws Exception {
         List<BeneficiaryEntity> beneficiaries = beneficiaryRepository.findByCustomerId(customerId);
@@ -65,6 +73,8 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         return beneficiaries;
     }
 
+    // Delete a beneficiary from the system using their ID
+    // in charge: dat
     @Override
     public void deleteBeneficiary(long id) throws ExecutionException {
         beneficiaryRepository.deleteById(id);

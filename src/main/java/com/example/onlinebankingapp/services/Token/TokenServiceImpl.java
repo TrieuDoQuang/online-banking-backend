@@ -19,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService{
 
+    //jwt settings
     private static final int MAX_TOKENS = 3;
     @Value("${jwt.expiration}")
     private int expiration;
@@ -27,17 +28,24 @@ public class TokenServiceImpl implements TokenService{
 
     private final TokenRepository tokenRepository;
     private final JwtTokenUtils jwtTokenUtil;
+
+    //refresh a token
+    //in charge: trieu
     @Transactional
     @Override
     public TokenEntity refreshToken(String refreshToken, CustomerEntity customer) throws Exception{
+        //find the refresh token
         TokenEntity existingToken = tokenRepository.findByRefreshToken(refreshToken);
+        //check if the requested token exists
         if(existingToken == null) {
             throw new DataNotFoundException("Refresh token does not exist");
         }
+        //check if it has expired
         if(existingToken.getRefreshExpirationDate().compareTo(LocalDateTime.now()) < 0){
             tokenRepository.delete(existingToken);
             throw new ExpiredTokenException("Refresh token is expired");
         }
+        //generate new jwt token
         String token = jwtTokenUtil.generateToken(customer);
         LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expiration);
         existingToken.setExpirationDate(expirationDateTime);
@@ -46,6 +54,9 @@ public class TokenServiceImpl implements TokenService{
         existingToken.setRefreshExpirationDate(LocalDateTime.now().plusSeconds(expirationRefreshToken));
         return existingToken;
     }
+
+    //add a new token for a customer
+    //in charge: trieu
     @Transactional
     @Override
     public TokenEntity addToken(CustomerEntity customer,String token, boolean isMobileDevice) {
