@@ -13,14 +13,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.sql.Date;
 import java.time.LocalDate;
 
+//in charge: Khai + Dat
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@MappedSuperclass
-@SuperBuilder
-@EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAccount {
+@MappedSuperclass // Indicates that the class is mapped to the database but not directly as an entity
+@SuperBuilder // Provides a builder pattern for the class
+@EntityListeners(AuditingEntityListener.class) // Registers the AuditingEntityListener to automatically populate audit-related fields
+public abstract class AbstractAccount //abstract class for account
+{
 
     @Column(name = "account_number", length = 10, nullable = false, unique = true)
     private String accountNumber;
@@ -42,6 +44,7 @@ public abstract class AbstractAccount {
     @PrePersist
     protected void onCreate() {
 
+        // Set default values for accountStatus, accountType, dateOpened, and dateClosed if they are null
         if(this.accountStatus == null) {
             accountStatus = AccountStatus.ACTIVE;
         }

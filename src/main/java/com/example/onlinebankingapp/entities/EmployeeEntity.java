@@ -9,14 +9,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+//not implemented
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="employees")
-public class EmployeeEntity extends AbstractUser{
+@Table(name ="employees") //not implemented
+public class EmployeeEntity extends AbstractUser{ //not implemented
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

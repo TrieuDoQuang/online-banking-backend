@@ -14,26 +14,27 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+//in charge: Trieu
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="customers")
-public class CustomerEntity extends AbstractUser implements OAuth2User, UserDetails {
+@Table(name ="customers") // Specifies the name of the table in the database
+public class CustomerEntity extends AbstractUser implements OAuth2User, UserDetails // Implementing OAuth2User and UserDetails interfaces
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<PaymentAccountEntity> paymentAccounts;
+    private Long id; // Primary key of the entity
 
     @Column(name="pin_number", length = 6)
-    private Long pinNumber;
+    private Long pinNumber; // Represents the PIN number of the customer
 
     @Column(name = "is_active")
-    private boolean active;
+    private boolean active; // Indicates whether the customer's account is active
+
+    // Implementing OAuth2User and UserDetails interfaces
     @Override
     public Map<String, Object> getAttributes() {
         return null;
@@ -52,20 +53,20 @@ public class CustomerEntity extends AbstractUser implements OAuth2User, UserDeta
     @Override
     public boolean isAccountNonExpired() {
         return true;
-    }
+    } // Returning true as default implementation
 
     @Override
     public boolean isAccountNonLocked() {
         return true;
-    }
+    } // Returning true as default implementation
 
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
+    } // Returning true as default implementation
 
     @Override
     public boolean isEnabled() {
         return true;
-    }
+    } // Returning true as default implementation
 }
