@@ -20,12 +20,17 @@ import java.util.List;
 public class InterestRateController {
     private final InterestRateService interestRateService;
 
+    //end point for inserting an interest rate
+    //in charge: khai
     @PostMapping("")
     public ResponseEntity<?> insertInterestRate(
             @Valid @RequestBody InterestRateDTO interestRateDTO
     ) {
         try {
+            // Insert the interest rate using the provided DTO
             InterestRateEntity interestRateResponse = interestRateService.insertInterestRate(interestRateDTO);
+
+            // Return a successful response with the inserted interest rate data
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .status(HttpStatus.OK)
@@ -37,11 +42,15 @@ public class InterestRateController {
         }
     }
 
+    //end point for getting all the interest rates
+    //in charge: khai
     @GetMapping("")
     public ResponseEntity<?> getAllInterestRates(){
         try{
+            // Retrieve all interest rates
             List<InterestRateEntity> interestRateEntities = interestRateService.getAllInterestRates();
 
+            //build response
             List<InterestRateResponse> interestRateResponses = interestRateEntities.stream()
                     .map(InterestRateResponse::fromInterestRate)
                     .toList();
@@ -50,6 +59,7 @@ public class InterestRateController {
                     .interestRateResponses(interestRateResponses)
                     .build();
 
+            // Return a successful response with the interest rate data
             return ResponseEntity.ok().body(ResponseObject.builder()
                             .status(HttpStatus.OK)
                             .message("Lấy tất cả phương thức lãi xuất thành công!")
@@ -60,10 +70,15 @@ public class InterestRateController {
         }
     }
 
+    //end point for getting an interest rate by id
+    //in charge: khai
     @GetMapping("{id}")
     public ResponseEntity<?> getInterestRateById(@Valid @PathVariable("id") Long interestRate_Id){
         try{
+            // Retrieve the interest rate by ID
             InterestRateEntity queryInterestRate = interestRateService.getInterestRateById(interestRate_Id);
+
+            // Return a successful response with the interest rate data
             return ResponseEntity.ok().body(ResponseObject.builder()
                             .status(HttpStatus.OK)
                             .message("Lấy phương thức lãi xuất thành công!")
@@ -74,12 +89,17 @@ public class InterestRateController {
         }
     }
 
+    //end point for updating an interest rate
+    //in charge: khai
     @PutMapping("{id}")
     public ResponseEntity<?> updateInterestRate(
             @Valid @PathVariable("id") Long interestRate_Id,
             @Valid @RequestBody InterestRateDTO interestRateDTO) {
         try {
+            //updating the interest rate
             InterestRateEntity updatedInterestRate = interestRateService.updateInterestRate(interestRate_Id, interestRateDTO);
+
+            //return result in response
             return ResponseEntity.ok().body(ResponseObject.builder()
                     .status(HttpStatus.OK)
                     .message("Cập nhật phương thức lãi xuất thành công!")

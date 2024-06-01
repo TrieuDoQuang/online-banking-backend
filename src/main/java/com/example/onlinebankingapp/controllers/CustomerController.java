@@ -27,11 +27,16 @@ public class CustomerController {
     private final CustomerService customerService;
     private final TokenService tokenService;
 
+    //This endpoint allows clients to insert a new customer into the system/ registering account.
+    //In charge: Trieu
     @PostMapping("/insertCustomer")
     public ResponseEntity<?> insertCustomer(@Valid @RequestBody CustomerDTO customerDTO)
     {
         try {
+            //insert a customer
             CustomerEntity customerEntityResponse = customerService.insertCustomer(customerDTO);
+
+            //return data in response
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .result(CustomerResponse.fromCustomerResponse(customerEntityResponse))
@@ -45,16 +50,21 @@ public class CustomerController {
 
     }
 
-
+    //This endpoint perform login action
+    //In charge: Trieu
     @PostMapping("/login")
     public ResponseEntity<?> login (@Valid @RequestBody CustomerLoginDTO customerLoginDTO,  HttpServletRequest request)
     {
         try {
+            //authenticate login using email, password in DTO
             String token = customerService.login(customerLoginDTO);
+
+            //build response and jwt token
             String customerAgent = request.getHeader("Customer-Agent");
             CustomerEntity customer = customerService.getCustomerDetailsFromToken(token);
             TokenEntity jwtToken = tokenService.addToken(customer, token, isMobileDevice(customerAgent));
 
+            //build response
             LoginResponse loginResponse = LoginResponse.builder()
                     .token(jwtToken.getToken())
                     .tokenType(jwtToken.getTokenType())
@@ -62,6 +72,8 @@ public class CustomerController {
                     .fullName(customer.getName())
                     .id(customer.getId())
                     .build();
+
+            //return response with jwt token and user info
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .result(loginResponse)
@@ -73,11 +85,19 @@ public class CustomerController {
         }
 
     }
+
+    //This endpoint allows clients to refresh an expired access token using a valid refresh token
+    //In charge: Trieu
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken (@Valid @RequestBody RefreshTokenDTO refreshTokenDTO) throws Exception {
         try {
+            // Retrieve customer details from the refresh token
         CustomerEntity customer = customerService.getCustomerDetailsFromRefreshToken(refreshTokenDTO.getRefreshToken());
+
+            // Refresh the access token
         TokenEntity jwtToken = tokenService.refreshToken(refreshTokenDTO.getRefreshToken(), customer);
+
+            // Return a successful response with the new access token
         LoginResponse loginResponse = LoginResponse.builder()
                 .token(jwtToken.getToken())
                 .tokenType(jwtToken.getTokenType())
@@ -97,11 +117,16 @@ public class CustomerController {
         }
     }
 
+    //end point for getting a customer by its id
+    // in charge: Dat
     @GetMapping("/getById/{customerId}")
     public ResponseEntity<?> getCustomerById(@Valid @PathVariable("customerId") long customerId)
     {
         try {
+            //getting a customer by its id
             CustomerEntity customerEntityResponse = customerService.getCustomerById(customerId);
+
+            //return result in response
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .result(CustomerResponse.fromCustomerResponse(customerEntityResponse))
@@ -115,10 +140,15 @@ public class CustomerController {
 
     }
 
+    //end point for changing password of a customer
+    // in charge: Dat
     @PutMapping("/changePassword/{customerId}")
     public ResponseEntity<?> changePassword (@PathVariable Long customerId, @Valid @RequestBody ChangePasswordCustomerDTO customerDTO ) throws Exception {
         try {
+            //change user password
             customerService.changePassword(customerId, customerDTO);
+
+            //return result in response
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .result(customerDTO)
@@ -131,6 +161,8 @@ public class CustomerController {
         }
     }
 
+    // Check if it's a mobile device
+    // in charge: Trieu
     private boolean isMobileDevice(String customerAgent) {
         // Kiểm tra Customer-Agent header để xác định thiết bị di động
         // Ví dụ đơn giản:
