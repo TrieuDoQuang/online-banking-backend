@@ -134,4 +134,26 @@ public class RewardController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/userReward/{id}")
+    public ResponseEntity<?> getUserRewards(@Valid @PathVariable("id") Long userId) {
+        try {
+            List<RewardEntity> rewardEntityList = rewardService.getUserRewards(userId);
+            List<RewardResponse> rewardResponseList = rewardEntityList.stream()
+                    .map(RewardResponse::fromReward)
+                    .toList();
+
+            RewardListResponse rewardListResponse = RewardListResponse.builder()
+                    .rewards(rewardResponseList)
+                    .build();
+
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .status(HttpStatus.OK)
+                    .message("Get user reward list successfully!")
+                    .result(rewardListResponse)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

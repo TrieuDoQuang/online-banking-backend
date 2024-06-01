@@ -1,11 +1,16 @@
 package com.example.onlinebankingapp.services.Reward;
 
 import com.example.onlinebankingapp.dtos.RewardDTO;
+import com.example.onlinebankingapp.entities.AccountRewardEntity;
+import com.example.onlinebankingapp.entities.PaymentAccountEntity;
 import com.example.onlinebankingapp.entities.RewardEntity;
+import com.example.onlinebankingapp.entities.SavingAccountEntity;
 import com.example.onlinebankingapp.enums.RewardType;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import com.example.onlinebankingapp.exceptions.InvalidParamException;
+import com.example.onlinebankingapp.repositories.AccountRewardRepository;
 import com.example.onlinebankingapp.repositories.RewardRepository;
+import com.example.onlinebankingapp.services.PaymentAccount.PaymentAccountService;
 import com.example.onlinebankingapp.utils.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +27,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RewardServiceImpl implements RewardService {
     private final RewardRepository rewardRepository;
+    private final PaymentAccountService paymentAccountService;
+    private final AccountRewardRepository accountRewardRepository;
     @Override
     public RewardEntity insertReward(RewardDTO rewardDTO) throws InvalidParamException {
         String dataValidationResult = isRewardDTOValid(rewardDTO);
@@ -88,6 +96,21 @@ public class RewardServiceImpl implements RewardService {
 
         editedRewardEntity.setImage(file.getBytes());
         return rewardRepository.save(editedRewardEntity);
+    }
+
+    @Override
+    public List<RewardEntity> getUserRewards(Long userId) throws DataNotFoundException {
+        List<PaymentAccountEntity> userPaymentAccountsList = paymentAccountService.getPaymentAccountsByCustomerId(userId);
+        List<RewardEntity> userRewardsList = new ArrayList<>();
+        for (PaymentAccountEntity paymentAccount : userPaymentAccountsList) {
+            List<AccountRewardEntity> accountRewardList
+                    = accountRewardRepository.findAccountRewardEntitiesByAccountRewardKeyPaymentAccount(paymentAccount);
+            List<AccountRewardEntity.AccountRewardRelationshipKey> rewardRelationshipKeys = accountRewardList.stream().map(AccountRewardEntity::getAccountRewardKey).toList();
+            List<RewardEntity> rewardsOfPaymentAccount = rewardRelationshipKeys.stream().map(AccountRewardEntity.AccountRewardRelationshipKey::getReward).toList();
+            userRewardsList.addAll(rewardsOfPaymentAccount);
+        }
+
+        return userRewardsList;
     }
 
     private String isRewardDTOValid(RewardDTO rewardDTO) {

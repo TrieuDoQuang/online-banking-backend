@@ -19,4 +19,5 @@ public interface RewardService {
 
     RewardEntity uploadRewardImg(Long id, MultipartFile file) throws Exception;
 
+    List<RewardEntity> getUserRewards(Long userId) throws DataNotFoundException;
 }
