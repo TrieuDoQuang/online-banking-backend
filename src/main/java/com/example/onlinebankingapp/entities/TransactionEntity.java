@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 
+//in charge: 3 members
 @Getter
 @Setter
 @Entity

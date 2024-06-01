@@ -1,6 +1,8 @@
 package com.example.onlinebankingapp.enums;
 
-public enum AccountStatus {
+//in charge: Khai
+public enum AccountStatus //enum for Account Status
+{
     DEFAULT,
     ACTIVE,
     INACTIVE

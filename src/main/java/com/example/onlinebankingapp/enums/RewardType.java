@@ -1,6 +1,8 @@
 package com.example.onlinebankingapp.enums;
 
-public enum RewardType {
+//in charge: khai
+public enum RewardType //enum for reward types
+{
     SHOPPING,
     CULINARY,
     ENTERTAINMENT

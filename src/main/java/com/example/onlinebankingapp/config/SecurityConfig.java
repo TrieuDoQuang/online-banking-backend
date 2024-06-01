@@ -28,12 +28,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+//in charge: Trieu
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 
 public class SecurityConfig {
     private final CustomerRepository customerRepository;
+
+    // Define a bean for UserDetailsService
     @Bean
     public UserDetailsService userDetailsService() {
         return subject -> {
@@ -53,11 +56,14 @@ public class SecurityConfig {
             throw new UsernameNotFoundException("User not found with subject: " + subject);
         };
     }
+
+    // Define a bean for PasswordEncoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Define a bean for AuthenticationProvider
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -65,18 +71,24 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
+    // Define a bean for AuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config
     ) throws Exception {
         return config.getAuthenticationManager();
     }
+
+    // Define a bean for SecurityFilterChain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Disable CSRF protection
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests()
                 .anyRequest().permitAll();
 
+        // Configure CORS policy
         http.cors(new Customizer<CorsConfigurer<HttpSecurity>>() {
             @Override
             public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
