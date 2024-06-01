@@ -45,7 +45,7 @@ public class AccountRewardResponse {
                 .rewardName(reward.getRewardName())
                 .costPoint(reward.getCostPoint())
                 .rewardType(String.valueOf(reward.getRewardType()))
-                .imageLink(createImageLink(reward.getRewardName()))
+                .imageLink(createImageLink(reward.getId().toString()))
                 .isValid(accountReward.isValid())
                 .build();
     }

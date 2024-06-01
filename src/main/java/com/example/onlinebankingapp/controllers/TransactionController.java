@@ -30,11 +30,15 @@ public class TransactionController {
     private final EmailService emailService;
 
 
+    // Endpoint for retrieving transactions history by customer ID
+    // In charge: Dat
     @GetMapping("/getByCustomerId/{id}")
     public ResponseEntity<?> getTransactionsByCustomerId(@Valid @PathVariable("id") Long customerId) {
         try {
+            //call service layer to get all transactions of a customer
             List<TransactionEntity> transactions = transactionService.getTransactionsByCustomerId(customerId);
 
+            //creating response
             List<TransactionResponse> transactionResponses = transactions.stream()
                     .map(TransactionResponse::fromTransaction)
                     .toList();
@@ -44,6 +48,7 @@ public class TransactionController {
                     .transactions(transactionResponses)
                     .build();
 
+            //return response
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .message("Get Transactions History Successfully")
@@ -55,11 +60,16 @@ public class TransactionController {
         }
     }
 
+    // Endpoint for sending OTP to a specified email address
+    // In charge: Dat
     @PostMapping("/sendOtp")
     public ResponseEntity<?> sendOtp(@RequestBody OTPRequest request) {
         try {
+            //call service layer to generate and send otp
             String otp = otpService.generateOtp(request.getReceiverEmail());
             emailService.sendOtpEmail(request.getReceiverEmail(), otp);
+
+            //return response
             return ResponseEntity.ok(
                     ResponseObject.builder()
                             .message("OTP sent to email!")
@@ -70,10 +80,15 @@ public class TransactionController {
         }
     }
 
+    // Endpoint for verifying OTP and making a transaction
+    // In charge: Dat
     @PostMapping("/verifyOtpAndMakeTransaction")
     public ResponseEntity<?> verifyOtpAndMakeTransaction(@RequestBody OTPVerificationRequest request) {
         try {
+            //call service layer to verify otp
             boolean isValid = otpService.verifyOtp(request.getReceiverEmail(), request.getOtp());
+
+            //return response based on validation result
             if (isValid) {
                 transactionService.makeTransaction(request.getTransactionDTO());
                 return ResponseEntity.ok(
