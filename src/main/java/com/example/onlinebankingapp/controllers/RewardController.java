@@ -1,9 +1,13 @@
 package com.example.onlinebankingapp.controllers;
 
+import com.example.onlinebankingapp.dtos.AccountRewardDTO;
 import com.example.onlinebankingapp.dtos.RewardDTO;
+import com.example.onlinebankingapp.entities.AccountRewardEntity;
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
 import com.example.onlinebankingapp.entities.RewardEntity;
 import com.example.onlinebankingapp.entities.SavingAccountEntity;
+import com.example.onlinebankingapp.responses.AccountReward.AccountRewardListResponse;
+import com.example.onlinebankingapp.responses.AccountReward.AccountRewardResponse;
 import com.example.onlinebankingapp.responses.PaymentAccount.PaymentAccountResponse;
 import com.example.onlinebankingapp.responses.ResponseObject;
 import com.example.onlinebankingapp.responses.Reward.RewardListResponse;
@@ -129,6 +133,56 @@ public class RewardController {
                     .message("Update reward successfully")
                     .status(HttpStatus.OK)
                     .result(RewardResponse.fromReward(rewardEntity))
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/userReward/{id}")
+    public ResponseEntity<?> getUserRewards(@Valid @PathVariable("id") Long userId) {
+        try {
+            List<AccountRewardEntity> accountRewardList = rewardService.getUserAccountRewards(userId);
+            List<AccountRewardResponse> accountRewardResponseList = accountRewardList.stream()
+                    .map(AccountRewardResponse::fromAccountReward)
+                    .toList();
+
+            AccountRewardListResponse accountRewardListResponse = AccountRewardListResponse.builder()
+                    .accountRewards(accountRewardResponseList)
+                    .build();
+
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .status(HttpStatus.OK)
+                    .message("Get user reward list successfully!")
+                    .result(accountRewardListResponse)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/userReward/redeem")
+    public ResponseEntity<?> redeemReward(@Valid @RequestBody AccountRewardDTO accountRewardDTO) {
+        try {
+            AccountRewardEntity newAccountRewardEntity = rewardService.redeemReward(accountRewardDTO);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .status(HttpStatus.OK)
+                    .message("Redeem reward successfully!")
+                    .result(AccountRewardResponse.fromAccountReward(newAccountRewardEntity))
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/userReward/useReward")
+    public ResponseEntity<?> useReward(@Valid @RequestBody AccountRewardDTO accountRewardDTO) {
+        try {
+            AccountRewardEntity newAccountRewardEntity = rewardService.useReward(accountRewardDTO);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .status(HttpStatus.OK)
+                    .message("Use reward successfully!")
+                    .result(AccountRewardResponse.fromAccountReward(newAccountRewardEntity))
                     .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
