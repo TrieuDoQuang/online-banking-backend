@@ -24,4 +24,6 @@ public interface RewardService {
     List<AccountRewardEntity> getUserAccountRewards(Long userId) throws DataNotFoundException;
 
     AccountRewardEntity redeemReward(AccountRewardDTO accountRewardDTO) throws Exception;
+
+    AccountRewardEntity useReward(AccountRewardDTO accountRewardDTO) throws Exception;
 }

@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface AccountRewardRepository extends JpaRepository<AccountRewardEntity, AccountRewardEntity.AccountRewardRelationshipKey> {
     List<AccountRewardEntity> findAccountRewardEntitiesByAccountRewardKeyPaymentAccount(PaymentAccountEntity paymentAccount);
-
     boolean existsAccountRewardEntityByAccountRewardKey(AccountRewardEntity.AccountRewardRelationshipKey accountRewardKey);
+    AccountRewardEntity findAccountRewardEntityByAccountRewardKey(AccountRewardEntity.AccountRewardRelationshipKey accountRewardKey);
 ;}

@@ -174,4 +174,18 @@ public class RewardController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PutMapping("/userReward/useReward")
+    public ResponseEntity<?> useReward(@Valid @RequestBody AccountRewardDTO accountRewardDTO) {
+        try {
+            AccountRewardEntity newAccountRewardEntity = rewardService.useReward(accountRewardDTO);
+            return ResponseEntity.ok(ResponseObject.builder()
+                    .status(HttpStatus.OK)
+                    .message("Use reward successfully!")
+                    .result(AccountRewardResponse.fromAccountReward(newAccountRewardEntity))
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

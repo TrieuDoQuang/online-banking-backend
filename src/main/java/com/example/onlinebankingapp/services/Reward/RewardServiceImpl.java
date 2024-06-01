@@ -149,6 +149,33 @@ public class RewardServiceImpl implements RewardService {
         return accountRewardRepository.save(newAccountReward);
     }
 
+    @Override
+    public AccountRewardEntity useReward(AccountRewardDTO accountRewardDTO) throws Exception {
+        PaymentAccountEntity queryPaymentAccount = paymentAccountService.getPaymentAccountById(accountRewardDTO.getPaymentAccountId());
+        RewardEntity queryReward = getRewardById(accountRewardDTO.getRewardId());
+
+        AccountRewardEntity.AccountRewardRelationshipKey relationshipKey = AccountRewardEntity.AccountRewardRelationshipKey.builder()
+                .reward(queryReward)
+                .paymentAccount(queryPaymentAccount)
+                .build();
+
+        AccountRewardEntity accountReward = accountRewardRepository.findAccountRewardEntityByAccountRewardKey(relationshipKey);
+
+        //check if the account has this reward
+        if(accountReward == null){
+            throw new Exception("This account doesn't have reward Id: " + accountRewardDTO.getRewardId());
+        }
+
+        //check if the reward is still valid
+        if(accountReward.isValid() == false){
+            throw new Exception("This reward has already been used");
+        }
+
+        accountReward.setValid(false);
+
+        return accountRewardRepository.save(accountReward);
+    }
+
     private String isRewardDTOValid(RewardDTO rewardDTO) {
         if (StringUtils.isBlank(rewardDTO.getRewardName())
                 || StringUtils.isBlank(rewardDTO.getRewardType())) {
