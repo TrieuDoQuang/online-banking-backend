@@ -34,27 +34,37 @@ public class JwtTokenFilter  extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtil;
 
 
+    //overriding the doFilterInternal function
+    //in charge: Trieu
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
-
+        // Check if the request should bypass token validation
         try {
             if(isBypassToken(request)) {
-                filterChain.doFilter(request, response); //enable bypass
+                filterChain.doFilter(request, response); // Enable bypass for certain endpoints
                 return;
             }
             final String authHeader = request.getHeader("Authorization");
+            // Check if Authorization header is present and starts with "Bearer "
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                // If not, send an unauthorized error response
                 response.sendError(
                         HttpServletResponse.SC_UNAUTHORIZED,
                         "authHeader null or not started with Bearer");
                 return;
             }
+            // Extract the token from the header
             final String token = authHeader.substring(7);
+            // Extract the subject (phone number) from the token
             final String phoneNumber = jwtTokenUtil.getSubject(token);
+            // Check if the authentication context is null and the phone number extracted is not null
             if (phoneNumber != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Load user details by phone number
                 CustomerEntity customer = (CustomerEntity)  userDetailsService.loadUserByUsername(phoneNumber);
+                // Validate the token
                 if(jwtTokenUtil.validateToken(token, customer)) {
+                    // If valid, set authentication token in security context
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
                                     customer,
@@ -65,14 +75,17 @@ public class JwtTokenFilter  extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
-            filterChain.doFilter(request, response); //enable bypass
+            filterChain.doFilter(request, response); // Continue the filter chain
         }catch (Exception e) {
+            // Handle exceptions
             //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(e.getMessage());
         }
     }
 
+    // Method to check if certain endpoints can bypass token validation
+    //in charge: Trieu
     private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 // Healthcheck request, no JWT token required

@@ -7,13 +7,16 @@ import lombok.*;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-
+//in charge: dat
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransactionResponse {
+public class TransactionResponse //custom response for transaction data
+{
+
+    //transaction fields in response
     private Long id;
 
     private Double amount;
@@ -30,7 +33,7 @@ public class TransactionResponse {
     @JsonProperty("receiver_account_number")
     private String receiverAccountNumber;
 
-
+    // Static method to convert TransactionEntity to TransactionResponse
     public static TransactionResponse fromTransaction(TransactionEntity transaction){
         return TransactionResponse.builder()
                 .id(transaction.getId())

@@ -9,27 +9,26 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+//in charge: khai
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Table(name ="interest_rates")
-public class InterestRateEntity {
+@Table(name ="interest_rates") // Specifies the name of the table in the database
+public class InterestRateEntity //interest rate table
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Primary key of the entity
 
     @Column(name="interestRate", nullable = false)
-    private Double interestRate;
+    private Double interestRate; // Represents the interest rate
 
     @Column(name="term", nullable = false)
-    private Integer term;
+    private Integer term; // Represents the term of the interest rate
 
     @Column(name="min_balance", nullable = false)
-    private Double minBalance;
-
-//    @OneToMany(mappedBy = "interestRate", cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-//    private List<SavingAccountEntity> savingAccounts;
+    private Double minBalance; // Represents the minimum balance required for the interest rate
 }

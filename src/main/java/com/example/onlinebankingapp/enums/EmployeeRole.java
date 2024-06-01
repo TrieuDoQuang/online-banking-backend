@@ -1,6 +1,8 @@
 package com.example.onlinebankingapp.enums;
 
-public enum EmployeeRole {
+//not implemented
+public enum EmployeeRole //not implemented
+{
     ADMINISTRATOR,
     STAFF
 }

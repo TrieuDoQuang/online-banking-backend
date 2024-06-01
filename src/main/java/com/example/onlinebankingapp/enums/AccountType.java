@@ -1,6 +1,8 @@
 package com.example.onlinebankingapp.enums;
 
-public enum AccountType {
+//in charge: Khai
+public enum AccountType //enum for account type
+{
     CLASSIC,
     PREMIUM
 }

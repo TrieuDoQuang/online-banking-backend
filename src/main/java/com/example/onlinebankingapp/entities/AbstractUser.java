@@ -5,13 +5,15 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.Date;
 
+//in charge: Dat + Khai
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@MappedSuperclass
-@SuperBuilder
-public abstract class AbstractUser {
+@MappedSuperclass // Indicates that the class is mapped to the database but not directly as an entity
+@SuperBuilder // Provides a builder pattern for the class
+public abstract class AbstractUser //abstract class for user
+{
     @Column(name="email", length = 100, nullable = false, unique = true)
     private String email;
 

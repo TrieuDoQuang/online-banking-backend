@@ -5,15 +5,18 @@ import lombok.*;
 
 import java.util.List;
 
+//in charge: dat + trieu
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginResponse {
+public class LoginResponse //custom response for login operation
+{
 //    @JsonProperty("message")
 //    private String message;
 
+    //login data fields
     @JsonProperty("token")
     private String token;
 

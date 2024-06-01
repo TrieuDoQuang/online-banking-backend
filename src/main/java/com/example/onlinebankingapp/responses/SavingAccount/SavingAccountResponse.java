@@ -8,13 +8,15 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
-
+//in charge: khai
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SavingAccountResponse {
+public class SavingAccountResponse //custom response for saving account data
+{
+    //saving account fields
     private Long id;
 
     @JsonProperty("account_number")
@@ -44,6 +46,7 @@ public class SavingAccountResponse {
     @JsonProperty("interest_rate_id")
     private Long interestRateId;
 
+    //static method to create savingAccountResponse from SavingAccountEntity
     public static SavingAccountResponse fromSavingAccount(SavingAccountEntity savingAccount){
         return SavingAccountResponse.builder()
                 .id(savingAccount.getId())

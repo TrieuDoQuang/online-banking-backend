@@ -6,32 +6,33 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
-
+//in charge: dat
 @Data
 @Getter
 @Setter
 //@AllArgsConstructor
 @NoArgsConstructor
-public class TransactionDTO {
+public class TransactionDTO //dto for transaction
+{
 
 
-    private Double amount;
+    private Double amount; // Field for transaction amount
 
     @JsonProperty("transaction_date_time")
-    private Timestamp transactionDateTime;
+    private Timestamp transactionDateTime; // Field for transaction date time with JSON property name annotation
 
     @JsonProperty("transaction_remark")
-    private String transactionRemark;
+    private String transactionRemark; // Field for transaction remark with JSON property name annotation
 
     @JsonProperty("sender_account_number")
-    private String senderAccountNumber;
+    private String senderAccountNumber; // Field for sender account number with JSON property name annotation
 
     @JsonProperty("sender_email")
-    private String senderEmail;
+    private String senderEmail; // Field for sender email with JSON property name annotation
 
     @JsonProperty("receiver_account_number")
-    private String receiverAccountNumber;
+    private String receiverAccountNumber;  // Field for receiver account number with JSON property name annotation
 
     @JsonProperty("receiver_account_name")
-    private String receiverAccountName;
+    private String receiverAccountName; // Field for receiver account name with JSON property name annotation
 }
