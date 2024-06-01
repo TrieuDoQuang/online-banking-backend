@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
+// in charge: dat
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class TransactionListResponse {
+public class TransactionListResponse //custom response for list of transactions
+{
 
     private List<TransactionResponse> transactions;
 

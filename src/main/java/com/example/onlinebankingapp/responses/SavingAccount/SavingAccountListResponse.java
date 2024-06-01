@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
+// in charge: khai
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class SavingAccountListResponse {
+public class SavingAccountListResponse //custom response for list of saving accounts
+{
     private List<SavingAccountResponse> savingAccounts;
     private int totalPages;
 }

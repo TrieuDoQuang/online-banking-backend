@@ -9,12 +9,15 @@ import lombok.*;
 
 import java.sql.Timestamp;
 
+//in charge: dat
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BeneficiaryResponse {
+public class BeneficiaryResponse //custom response for beneficiary data
+{
+    //beneficiary data fields
     private Long id;
 
     private String name;
@@ -31,6 +34,7 @@ public class BeneficiaryResponse {
     @JsonProperty("account_number")
     private String accountNumber;
 
+    // Static method to create a BeneficiaryResponse object from a BeneficiaryEntity object
     public static BeneficiaryResponse fromBeneficiary(BeneficiaryEntity beneficiary){
         return BeneficiaryResponse.builder()
                 .id(beneficiary.getId())

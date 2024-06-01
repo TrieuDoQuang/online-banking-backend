@@ -6,21 +6,22 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
-
+//in charge: khai
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RewardDTO {
+public class RewardDTO //dto for reward
+{
     @JsonProperty("cost_point")
-    private Integer costPoint;
+    private Integer costPoint; // Field for cost point with JSON property name annotation
 
     @JsonProperty("reward_name")
-    private String rewardName;
+    private String rewardName; // Field for reward name with JSON property name annotation
 
     @JsonProperty("reward_type")
-    private String rewardType;
+    private String rewardType; // Field for reward type with JSON property name annotation
 
 //    @JsonProperty("image")
 //    private byte[] image;

@@ -1,5 +1,6 @@
 package com.example.onlinebankingapp.responses.PaymentAccount;
 
+//in charge: dat
 import com.example.onlinebankingapp.entities.PaymentAccountEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -10,8 +11,10 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentAccountResponse {
+public class PaymentAccountResponse //custom response for payment account data
+{
 
+    //payment account fields
     private Long id;
 
     @JsonProperty("account_number")
@@ -38,6 +41,7 @@ public class PaymentAccountResponse {
     @JsonProperty("customer_id")
     private Long customerId;
 
+    // Static method to convert PaymentAccountEntity to PaymentAccountResponse
     public static PaymentAccountResponse fromPaymentAccount(PaymentAccountEntity paymentAccount) {
         return PaymentAccountResponse
                 .builder()

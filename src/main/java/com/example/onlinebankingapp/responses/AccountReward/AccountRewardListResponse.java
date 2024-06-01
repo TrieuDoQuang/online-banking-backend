@@ -7,12 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
+//in charge: khai
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-public class AccountRewardListResponse {
+public class AccountRewardListResponse //custom response for list of account rewards
+{
     private List<AccountRewardResponse> accountRewards;
     private int totalPages;
 }

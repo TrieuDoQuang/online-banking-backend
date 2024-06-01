@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+//in charge: khai
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RewardResponse {
+public class RewardResponse //custom responsee for reward data
+{
+    //reward fields
     @JsonProperty("id")
     private Long id;
 
@@ -27,6 +29,7 @@ public class RewardResponse {
     @JsonProperty("image_link")
     private String imageLink;
 
+    // Static method to convert RewardEntity to RewardResponse
     public static RewardResponse fromReward(RewardEntity reward){
         return RewardResponse.builder()
                 .id(reward.getId())
@@ -37,6 +40,7 @@ public class RewardResponse {
                 .build();
     }
 
+    // Method to create image link that can be accessed via server api
     private static String createImageLink(String filename) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .replacePath("/api/rewards/image/" + filename)

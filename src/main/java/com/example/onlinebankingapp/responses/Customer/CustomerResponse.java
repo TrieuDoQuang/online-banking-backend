@@ -6,14 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.Date;
-
+//in charge: trieu
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerResponse {
+public class CustomerResponse //custom response for customer data
+{
 
+    //customer data fields
     private Long id;
 
     @JsonProperty("email")
@@ -37,6 +39,7 @@ public class CustomerResponse {
     @JsonProperty("pin_number")
     private Long pinNumber;
 
+    // Static method to create a CustomerResponse object from a CustomerEntity object
     public static CustomerResponse fromCustomerResponse(CustomerEntity customerEntity) {
         return CustomerResponse
                 .builder()

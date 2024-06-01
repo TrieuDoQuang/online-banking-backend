@@ -7,13 +7,15 @@ import com.example.onlinebankingapp.responses.Reward.RewardResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+// in charge: khai
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AccountRewardResponse {
+public class AccountRewardResponse //custom response for account reward data
+{
+    //account reward data fields
     @JsonProperty("reward_id")
     private Long rewardId;
 
@@ -35,6 +37,7 @@ public class AccountRewardResponse {
     @JsonProperty("image_link")
     private String imageLink;
 
+    // Static method to create an AccountRewardResponse object from an AccountRewardEntity object
     public static AccountRewardResponse fromAccountReward(AccountRewardEntity accountReward){
         RewardEntity reward = accountReward.getAccountRewardKey().getReward();
         PaymentAccountEntity paymentAccount = accountReward.getAccountRewardKey().getPaymentAccount();
@@ -50,6 +53,7 @@ public class AccountRewardResponse {
                 .build();
     }
 
+    // Private method to create an image link that can be accessed via server api
     private static String createImageLink(String filename) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .replacePath("/api/rewards/image/" + filename)
