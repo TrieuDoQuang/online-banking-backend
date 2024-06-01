@@ -8,6 +8,7 @@ import com.example.onlinebankingapp.entities.CustomerEntity;
 import com.example.onlinebankingapp.entities.TokenEntity;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import com.example.onlinebankingapp.exceptions.ExpiredTokenException;
+import com.example.onlinebankingapp.exceptions.InvalidEmailException;
 import com.example.onlinebankingapp.exceptions.InvalidPasswordException;
 import com.example.onlinebankingapp.repositories.CustomerRepository;
 import com.example.onlinebankingapp.repositories.TokenRepository;
@@ -39,14 +40,19 @@ public class CustomerServiceImpl implements CustomerService {
     private final TokenRepository tokenRepository;
 
     @Override
-    public String login(CustomerLoginDTO customerLoginDTO) throws Exception {
+    public String login(CustomerLoginDTO customerLoginDTO) throws Exception, InvalidEmailException {
         Optional <CustomerEntity> optionalCustomer = Optional.empty();
         String subject = null;
+
+        if (!isValidEmail(customerLoginDTO.getEmail())){
+            throw new InvalidEmailException("The format of email is not available!");
+        }
 
         if (optionalCustomer.isEmpty() && customerLoginDTO.getEmail() != null) {
             optionalCustomer = customerRepository.findByEmail(customerLoginDTO.getEmail());
             subject = customerLoginDTO.getEmail();
         }
+
         CustomerEntity existingUser = optionalCustomer.get();
 
         if(!passwordEncoder.matches(customerLoginDTO.getPassword(), existingUser.getPassword())) {
@@ -65,7 +71,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public CustomerEntity insertCustomer(CustomerDTO customerDTO) throws DataNotFoundException, ParseException, InvalidPasswordException {
+    public CustomerEntity insertCustomer(CustomerDTO customerDTO) throws DataNotFoundException, ParseException, InvalidPasswordException, InvalidEmailException {
         String email = customerDTO.getEmail();
         String citizenId = customerDTO.getCitizenId();
         String password = customerDTO.getPassword();
@@ -75,6 +81,9 @@ public class CustomerServiceImpl implements CustomerService {
                     "The length must be from 8 to 20 characters\n" +
                     "Contains at least 01 digit, 01 letter and 01 special character");
         };
+        if (!isValidEmail(email)){
+            throw new InvalidEmailException("The format of email is not available!");
+        }
         String encodedPassword = passwordEncoder.encode(password);
         if (customerRepository.existsByEmail(email)){
             throw new DataIntegrityViolationException("Exist customer with email");

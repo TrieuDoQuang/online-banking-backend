@@ -5,6 +5,7 @@ import com.example.onlinebankingapp.dtos.CustomerLoginDTO;
 import com.example.onlinebankingapp.entities.CustomerEntity;
 import com.example.onlinebankingapp.exceptions.DataNotFoundException;
 import com.example.onlinebankingapp.dtos.ChangePasswordCustomerDTO;
+import com.example.onlinebankingapp.exceptions.InvalidEmailException;
 import com.example.onlinebankingapp.exceptions.InvalidPasswordException;
 
 import javax.xml.crypto.Data;
@@ -13,9 +14,9 @@ import java.util.List;
 
 public interface CustomerService {
 
-    String login(CustomerLoginDTO customerLoginDTO) throws Exception;
+    String login(CustomerLoginDTO customerLoginDTO) throws Exception, InvalidEmailException;
 
-    CustomerEntity insertCustomer(CustomerDTO customerDTO) throws DataNotFoundException, ParseException, ParseException, InvalidPasswordException;
+    CustomerEntity insertCustomer(CustomerDTO customerDTO) throws DataNotFoundException, ParseException, ParseException, InvalidPasswordException, InvalidEmailException;
 
 
     CustomerEntity getCustomerDetailsFromToken(String token) throws Exception;
